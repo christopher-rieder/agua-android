@@ -11,14 +11,14 @@ import com.rieder.christopher.aguaapp.DomainClasses.Recorrido;
 
 public class RecorridoFragment extends Fragment {
 
-    private Recorrido mRecorrido;
+    private Recorrido recorrido;
 
     public RecorridoFragment() {
         //empty fragment
     }
 
     public void setRecorrido(Recorrido recorrido) {
-        mRecorrido = recorrido;
+        this.recorrido = recorrido;
     }
 
     @Override
@@ -26,8 +26,8 @@ public class RecorridoFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recorrido, container, false);
 
-        TextView nameTextView = rootView.findViewById(R.id.section_label);
-        nameTextView.setText(mRecorrido.getTest());
+        TextView nameTextView = rootView.findViewById(R.id.recorrido_textView);
+        nameTextView.setText(this.recorrido.getTest());
         return rootView;
     }
 }

@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.gson.Gson;
 import com.rieder.christopher.aguaapp.DomainClasses.Recorrido;
 
 import org.ankit.gpslibrary.MyTracker;
@@ -30,7 +31,17 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
 
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class RecorridoActivity extends AppCompatActivity {
+
+    // Trailing slash is needed
+    public static final String BASE_URL = "http://api.myservice.com/";
+    Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -55,6 +66,13 @@ public class RecorridoActivity extends AppCompatActivity {
 
         RetrieveRecorrido task = new RetrieveRecorrido();
         task.execute();
+
+        Gson gson = new Gson();
+        String json = "{\"clienteID\":1,\"nombre\":\"Cheslie O'Dreain\",\"domicilio\":\"89 Eastlawn Parkway\",\"telefono\":\"(351)-514-6286\",\"isDadoDeBaja\":0,\"latitud\":-31.360343,\"longitud\":-64.339902}";
+        BagOfPrimitives obj2 = gson.fromJson(json, BagOfPrimitives.class);
+
+
+
 
         // -----------------------------------------------------------------------------------------
 //        JSONArray results = null;
@@ -165,12 +183,14 @@ public class RecorridoActivity extends AppCompatActivity {
         @Override
         protected Recorrido doInBackground(String... urls) {
             Recorrido r = new Recorrido("");
-            String jsonResponse = "";
+            String jsonRecorrido = "";
+            String jsonClientes = "";
+
             try {
                 URL url = new URL("http://192.168.0.16:3000/api/fullRecorrido/2");
-                jsonResponse = makeHttpRequest(url);
-                Log.d("Response: ", jsonResponse);
-                r = new Recorrido(jsonResponse);
+                jsonRecorrido = makeHttpRequest(url);
+                Log.d("Response: ", jsonRecorrido);
+                r = new Recorrido(jsonRecorrido);
             } catch (Exception e) {
                 Log.e("ERROR EN HTTP GET", e.toString());
             }
@@ -229,7 +249,7 @@ public class RecorridoActivity extends AppCompatActivity {
         protected void onPostExecute(Recorrido feed) {
             // TODO: check this.exception
             // TODO: do something with the feed
-            updateJsonData(recorrido.getTest());
+            updateJsonData(feed.getTest());
             getLocation();
         }
     }
