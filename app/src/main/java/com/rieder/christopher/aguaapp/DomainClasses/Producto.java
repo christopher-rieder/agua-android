@@ -1,6 +1,6 @@
 package com.rieder.christopher.aguaapp.DomainClasses;
 
-public class Producto {
+public final class Producto {
 
     private final String nombre;
     private final int stock; //stock en deposito.

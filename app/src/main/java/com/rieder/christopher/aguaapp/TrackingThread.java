@@ -17,9 +17,9 @@ public class TrackingThread extends Thread {
     private double longitude;
     private Uri coordinates;
     private File file;
-    private RecorridoActivity ctx;
+    private VentaActivity ctx;
 
-    public TrackingThread(File file, RecorridoActivity ctx) {
+    public TrackingThread(File file, VentaActivity ctx) {
         this.file = file;
         this.ctx = ctx;
     }

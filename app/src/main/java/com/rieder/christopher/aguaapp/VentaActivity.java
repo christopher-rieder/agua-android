@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.google.gson.Gson;
+import com.rieder.christopher.aguaapp.DomainClasses.Cliente;
 import com.rieder.christopher.aguaapp.DomainClasses.Recorrido;
 
 import org.ankit.gpslibrary.MyTracker;
@@ -30,11 +31,12 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class RecorridoActivity extends AppCompatActivity {
+public class VentaActivity extends AppCompatActivity {
 
     // Trailing slash is needed
     public static final String BASE_URL = "http://api.myservice.com/";
@@ -48,7 +50,7 @@ public class RecorridoActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
     private TabLayout tabLayout;
-    RecorridoPagerAdapter mAdapter;
+    VentaPagerAdapter mAdapter;
     private Recorrido recorrido;
 
     private static final int REQUEST_CODE_PERMISSION = 2;
@@ -62,7 +64,7 @@ public class RecorridoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recorrido);
+        setContentView(R.layout.activity_venta);
 
         RetrieveRecorrido task = new RetrieveRecorrido();
         task.execute();
@@ -70,8 +72,6 @@ public class RecorridoActivity extends AppCompatActivity {
         Gson gson = new Gson();
         String json = "{\"clienteID\":1,\"nombre\":\"Cheslie O'Dreain\",\"domicilio\":\"89 Eastlawn Parkway\",\"telefono\":\"(351)-514-6286\",\"isDadoDeBaja\":0,\"latitud\":-31.360343,\"longitud\":-64.339902}";
         BagOfPrimitives obj2 = gson.fromJson(json, BagOfPrimitives.class);
-
-
 
 
         // -----------------------------------------------------------------------------------------
@@ -86,7 +86,7 @@ public class RecorridoActivity extends AppCompatActivity {
 //        }
 //
 //        mViewPager = (ViewPager) findViewById(R.id.recorridoViewPager);
-//        RecorridoPagerAdapter mAdapter = new RecorridoPagerAdapter(this, getSupportFragmentManager(), results);
+//        VentaPagerAdapter mAdapter = new VentaPagerAdapter(this, getSupportFragmentManager(), results);
 //        mViewPager.setAdapter(mAdapter);
 //
 //        tabLayout.setupWithViewPager(mViewPager);
@@ -105,23 +105,13 @@ public class RecorridoActivity extends AppCompatActivity {
         });
     }
 
-    private void updateJsonData(String str) {
-        JSONArray results = null;
-        try {
-            results = new JSONArray(str);
-        } catch (JSONException e) {
-            System.out.println("ERROR AL PROCESAR JSON");
-            e.printStackTrace();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-
+    private void updateJsonData(Recorrido recorrido) {
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.recorridoViewPager);
-        mAdapter = new RecorridoPagerAdapter(this, getSupportFragmentManager(), results);
+        mViewPager = findViewById(R.id.recorridoViewPager);
+        mAdapter = new VentaPagerAdapter(this, getSupportFragmentManager(), recorrido);
         mViewPager.setAdapter(mAdapter);
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
 
@@ -171,32 +161,45 @@ public class RecorridoActivity extends AppCompatActivity {
         coordinates = Uri.parse("geo:" + latitud + "," + longitud);
         Log.v("COORDINATES", latitud + "," + longitud);
 
-        int idx = this.mAdapter.getIndexClosestToLocation(latitud, longitud);
+        //int idx = this.mAdapter.getIndexClosestToLocation(latitud, longitud); //FIXME: METODO ESTA EN CLASE CLIENTE
+        int idx = 0;
         this.mViewPager.setCurrentItem(idx);
     }
 
 
     private class RetrieveRecorrido extends AsyncTask<String, Void, Recorrido> {
 
-        private Recorrido recorrido;
-
         @Override
         protected Recorrido doInBackground(String... urls) {
-            Recorrido r = new Recorrido("");
-            String jsonRecorrido = "";
-            String jsonClientes = "";
+            ArrayList<Cliente> clientes = new ArrayList<>();
+            Recorrido recorrido = null;
+            int numeroRecorrido = 1; // TODO: OBTENER DE LA APP
+            String BASE_URL = "http://192.168.0.16:3000/api/"; // TODO: VER EN DONDE PONER...
+            Gson gson = new Gson();
 
             try {
-                URL url = new URL("http://192.168.0.16:3000/api/fullRecorrido/2");
-                jsonRecorrido = makeHttpRequest(url);
-                Log.d("Response: ", jsonRecorrido);
-                r = new Recorrido(jsonRecorrido);
+                // GET AND BUILD RECORRIDO
+                URL url = new URL(BASE_URL + "recorrido/" + numeroRecorrido);
+                String jsonRecorridoResponse = makeHttpRequest(url);
+                Log.d("Response: ", jsonRecorridoResponse);
+                recorrido = gson.fromJson(jsonRecorridoResponse, Recorrido.class);
+
+                // GET AND BUILD CLIENTES ARRAYLIST
+                URL url2 = new URL(BASE_URL + "clientes");
+                String jsonClientesResponse = makeHttpRequest(url2);
+                Log.d("Response: ", jsonClientesResponse);
+
+                JSONArray jsonClientes = new JSONArray(jsonClientesResponse);
+                for (int i = 0; i < jsonClientes.length(); i++) {
+                    Cliente cliente = gson.fromJson(jsonClientes.getJSONObject(i).toString(), Cliente.class);
+                    clientes.add(cliente);
+                }
+                recorrido.buildVentas(clientes);
             } catch (Exception e) {
                 Log.e("ERROR EN HTTP GET", e.toString());
             }
 
-            this.recorrido = r;
-            return r;
+            return recorrido;
         }
 
         /**
@@ -249,7 +252,7 @@ public class RecorridoActivity extends AppCompatActivity {
         protected void onPostExecute(Recorrido feed) {
             // TODO: check this.exception
             // TODO: do something with the feed
-            updateJsonData(feed.getTest());
+            updateJsonData(feed);
             getLocation();
         }
     }

@@ -7,27 +7,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.rieder.christopher.aguaapp.DomainClasses.Recorrido;
+import com.rieder.christopher.aguaapp.DomainClasses.Venta;
 
-public class RecorridoFragment extends Fragment {
+public class VentaFragment extends Fragment {
 
-    private Recorrido recorrido;
+    private Venta venta;
 
-    public RecorridoFragment() {
+    public VentaFragment() {
         //empty fragment
     }
 
-    public void setRecorrido(Recorrido recorrido) {
-        this.recorrido = recorrido;
+    public void setRecorrido(Venta venta) {
+        this.venta = venta;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_recorrido, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_venta, container, false);
 
         TextView nameTextView = rootView.findViewById(R.id.recorrido_textView);
-        nameTextView.setText(this.recorrido.getTest());
+        nameTextView.setText(this.venta.toString());
         return rootView;
     }
 }

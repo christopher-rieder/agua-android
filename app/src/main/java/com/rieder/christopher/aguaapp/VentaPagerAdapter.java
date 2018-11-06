@@ -7,32 +7,33 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 
 import com.rieder.christopher.aguaapp.DomainClasses.Recorrido;
+import com.rieder.christopher.aguaapp.DomainClasses.Venta;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONStringer;
 
 import java.util.ArrayList;
 
 
-public class RecorridoPagerAdapter extends FragmentPagerAdapter {
+public class VentaPagerAdapter extends FragmentPagerAdapter {
 
-    private JSONArray recorridos;
+    private Recorrido recorrido;
+    private ArrayList<Venta> ventas;
 
-    RecorridoPagerAdapter(Context ctx, FragmentManager fm, JSONArray recorridos) {
+    VentaPagerAdapter(Context ctx, FragmentManager fm, Recorrido recorrido) {
         super(fm);
-        this.recorridos = recorridos;
+        this.recorrido = recorrido;
+        this.ventas = recorrido.getVentas();
     }
 
+    /*
     public int getIndexClosestToLocation(double latitud, double longitud) {
         int idx = 0;
         double shortestDistance = Double.MAX_VALUE;
         Recorrido r;
 
-        for (int i = 0; i < recorridos.length(); i++) {
+        for (int i = 0; i < recorridos.size(); i++) {
             try {
-                JSONObject client = recorridos.getJSONObject(i);
+                Recorrido client = recorridos.getJSONObject(i);
                 r = new Recorrido(client.toString(4));
                 double distance = r.getLocationDistance(latitud, longitud);
 
@@ -46,39 +47,23 @@ public class RecorridoPagerAdapter extends FragmentPagerAdapter {
             }
         }
         return idx;
-    }
+    }*/
 
 
     @Override
     public Fragment getItem(int i) {
-        RecorridoFragment rf = new RecorridoFragment();
-        int idx = 0;
-        Recorrido r = null;
-        try {
-            JSONObject client = recorridos.getJSONObject(i);
-            r = new Recorrido(client.toString(4));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
-        rf.setRecorrido(r);
+        VentaFragment rf = new VentaFragment();
+        rf.setRecorrido(ventas.get(i));
         return rf;
     }
 
     @Override
     public int getCount() {
-        return recorridos.length();
+        return ventas.size();
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        String str = "ERROR";
-        try {
-            str = recorridos.getJSONObject(position).getString("nombre");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return str;
+        return ventas.get(position).getCliente().getNombre();
     }
 }

@@ -1,6 +1,6 @@
 package com.rieder.christopher.aguaapp.DomainClasses;
 
-public class DetalleVenta {
+public final class DetalleVenta {
 
     private Producto producto;
     private double precioUnitario;

@@ -3,7 +3,7 @@ package com.rieder.christopher.aguaapp.DomainClasses;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Repartidor {
+public final class Repartidor {
 
     private final int repartidorID;
     private final String nombre;

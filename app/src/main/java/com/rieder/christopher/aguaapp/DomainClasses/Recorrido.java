@@ -8,41 +8,37 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Recorrido {
+public final class Recorrido {
 
-    private String jsonData; //TODO: FOR TESTING PURPOSES ONLY
+    private final int recorridoID;
+    private final String nombre;
+    private final String fecha;
+    private final int repartidorID;
+    private final int cantidadEnvasesLlenosInicial;
+    private final int cantidadEnvasesVaciosInicial;
+    private int cantidadEnvasesLlenosFinal;
+    private int cantidadEnvasesVaciosFinal;
+    private ArrayList<Venta> ventas;
 
-    public Recorrido(String jsonData) {
-        this.jsonData = jsonData;
+    public Recorrido(int recorridoID, String nombre, String fecha, int repartidorID, int cantidadEnvasesLlenosInicial, int cantidadEnvasesVaciosInicial) {
+        this.recorridoID = recorridoID;
+        this.nombre = nombre;
+        this.fecha = fecha;
+        this.repartidorID = repartidorID;
+        this.cantidadEnvasesLlenosInicial = cantidadEnvasesLlenosInicial;
+        this.cantidadEnvasesVaciosInicial = cantidadEnvasesVaciosInicial;
     }
 
-    public String getTest() {
-        return jsonData;
+    public void buildVentas(ArrayList<Cliente> clientes){
+
     }
 
-    public void setTest(String test) {
-        this.jsonData = jsonData;
+    public ArrayList<Venta> getVentas() {
+        return ventas;
     }
 
-    public String toString() {
-        return jsonData;
+    public String getNombre() {
+        return nombre;
     }
 
-    public double getLocationDistance(double latitud, double longitud) {
-        double distance = Double.MAX_VALUE;
-        try {
-            JSONObject data = new JSONObject(jsonData);
-            double lat = data.getDouble("latitud");
-            double lon = data.getDouble("longitud");
-
-            // NOTE: THIS IS A VERY SIMPLIFIED CALCULATION. IT'S OK FOR THE PURPOSES OF THIS APP,
-            // BUT BECAUSE WE DON'T NEED PRECISION, SO PYTHAGORAS IS OK.
-            double difLatitud = Math.abs(lat - latitud);
-            double difLongitud = Math.abs(lon - longitud);
-            distance = Math.sqrt(difLatitud * difLatitud + difLongitud * difLongitud);
-        } catch (JSONException e) {
-            Log.e("JSON", e.toString());
-        }
-        return distance;
-    }
 }
