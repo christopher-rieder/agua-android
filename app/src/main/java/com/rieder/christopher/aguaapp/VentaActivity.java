@@ -17,11 +17,12 @@ import android.view.View;
 
 import com.google.gson.Gson;
 import com.rieder.christopher.aguaapp.DomainClasses.Cliente;
+import com.rieder.christopher.aguaapp.DomainClasses.Producto;
 import com.rieder.christopher.aguaapp.DomainClasses.Recorrido;
+import com.rieder.christopher.aguaapp.DomainClasses.Venta;
 
 import org.ankit.gpslibrary.MyTracker;
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -32,6 +33,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -68,11 +71,6 @@ public class VentaActivity extends AppCompatActivity {
 
         RetrieveRecorrido task = new RetrieveRecorrido();
         task.execute();
-
-        Gson gson = new Gson();
-        String json = "{\"clienteID\":1,\"nombre\":\"Cheslie O'Dreain\",\"domicilio\":\"89 Eastlawn Parkway\",\"telefono\":\"(351)-514-6286\",\"isDadoDeBaja\":0,\"latitud\":-31.360343,\"longitud\":-64.339902}";
-        BagOfPrimitives obj2 = gson.fromJson(json, BagOfPrimitives.class);
-
 
         // -----------------------------------------------------------------------------------------
 //        JSONArray results = null;
@@ -178,14 +176,14 @@ public class VentaActivity extends AppCompatActivity {
             Gson gson = new Gson();
 
             try {
-                // GET AND BUILD RECORRIDO
+                // GET AND BUILD RECORRIDO ---------------------------------------------------------
                 URL url = new URL(BASE_URL + "recorrido/" + numeroRecorrido);
                 String jsonRecorridoResponse = makeHttpRequest(url);
                 Log.d("Response: ", jsonRecorridoResponse);
                 recorrido = gson.fromJson(jsonRecorridoResponse, Recorrido.class);
 
-                // GET AND BUILD CLIENTES ARRAYLIST
-                URL url2 = new URL(BASE_URL + "clientes");
+                // GET AND BUILD CLIENTES ARRAYLIST ------------------------------------------------
+                URL url2 = new URL(BASE_URL + "clientes/" + numeroRecorrido);
                 String jsonClientesResponse = makeHttpRequest(url2);
                 Log.d("Response: ", jsonClientesResponse);
 
@@ -195,6 +193,22 @@ public class VentaActivity extends AppCompatActivity {
                     clientes.add(cliente);
                 }
                 recorrido.buildVentas(clientes);
+
+                Producto agua = new Producto(1, "Agua 20 Litros", 200, 50);
+                Producto soda = new Producto(1, "Soda 1 Litro", 1000, 10);
+                for (Venta venta : recorrido.getVentas()) {
+                    Map<Producto, Integer> values = new HashMap<>();
+
+                    Integer cantidadAgua = (int) Math.ceil(Math.random() * 3);
+                    Integer cantidadSoda = (int) Math.ceil(Math.random() * 7);
+
+                    values.put(soda, cantidadSoda);
+                    values.put(agua, cantidadAgua);
+
+                    venta.buildDetalleVentas(values);
+                }
+
+
             } catch (Exception e) {
                 Log.e("ERROR EN HTTP GET", e.toString());
             }

@@ -2,12 +2,21 @@ package com.rieder.christopher.aguaapp.DomainClasses;
 
 public final class Cliente {
 
-    private int clienteID;
-    private String nombre;
-    private String domicilio;
-    private String telefono;
-    private double longitud;
-    private double latitud;
+    private final int clienteID;
+    private final String nombre;
+    private final String domicilio;
+    private final String telefono;
+    private final double longitud;
+    private final double latitud;
+
+    public Cliente(int clienteID, String nombre, String domicilio, String telefono, double longitud, double latitud) {
+        this.clienteID = clienteID;
+        this.nombre = nombre;
+        this.domicilio = domicilio;
+        this.telefono = telefono;
+        this.longitud = longitud;
+        this.latitud = latitud;
+    }
 
     public String getNombre() {
         return nombre;
@@ -35,5 +44,9 @@ public final class Cliente {
         double difLatitud = Math.abs(this.latitud - latitud);
         double difLongitud = Math.abs(this.longitud - longitud);
         return Math.sqrt(difLatitud * difLatitud + difLongitud * difLongitud);
+    }
+
+    public int getClienteID() {
+        return clienteID;
     }
 }

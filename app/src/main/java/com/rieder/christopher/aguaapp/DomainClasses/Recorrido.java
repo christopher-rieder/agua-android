@@ -1,12 +1,6 @@
 package com.rieder.christopher.aguaapp.DomainClasses;
 
-import android.util.Log;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.Date;
 
 public final class Recorrido {
 
@@ -16,8 +10,8 @@ public final class Recorrido {
     private final int repartidorID;
     private final int cantidadEnvasesLlenosInicial;
     private final int cantidadEnvasesVaciosInicial;
-    private int cantidadEnvasesLlenosFinal;
-    private int cantidadEnvasesVaciosFinal;
+    private int cantidadEnvasesLlenosFinal = 0;
+    private int cantidadEnvasesVaciosFinal = 0;
     private ArrayList<Venta> ventas;
 
     public Recorrido(int recorridoID, String nombre, String fecha, int repartidorID, int cantidadEnvasesLlenosInicial, int cantidadEnvasesVaciosInicial) {
@@ -30,7 +24,11 @@ public final class Recorrido {
     }
 
     public void buildVentas(ArrayList<Cliente> clientes){
-
+        this.ventas = new ArrayList<>();
+        for (Cliente cliente : clientes) {
+            Venta v = new Venta(cliente);
+            this.ventas.add(v);
+        }
     }
 
     public ArrayList<Venta> getVentas() {
@@ -40,5 +38,4 @@ public final class Recorrido {
     public String getNombre() {
         return nombre;
     }
-
 }
