@@ -6,13 +6,10 @@ import java.util.Map;
 public final class Venta {
 
     private final Cliente cliente;
-    private final String domicilio;
     private ArrayList<DetalleVenta> detallesVenta;
 
     public Venta(Cliente cliente) {
         this.cliente = cliente;
-        String dom = cliente.getDomicilio();
-        this.domicilio = dom;
     }
 
     public Cliente getCliente() {

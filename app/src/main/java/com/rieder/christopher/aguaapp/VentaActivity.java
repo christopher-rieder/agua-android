@@ -159,8 +159,7 @@ public class VentaActivity extends AppCompatActivity {
         coordinates = Uri.parse("geo:" + latitud + "," + longitud);
         Log.v("COORDINATES", latitud + "," + longitud);
 
-        //int idx = this.mAdapter.getIndexClosestToLocation(latitud, longitud); //FIXME: METODO ESTA EN CLASE CLIENTE
-        int idx = 0;
+        int idx = this.mAdapter.getIndexClosestToLocation(latitud, longitud);
         this.mViewPager.setCurrentItem(idx);
     }
 
@@ -212,6 +211,8 @@ public class VentaActivity extends AppCompatActivity {
             } catch (Exception e) {
                 Log.e("ERROR EN HTTP GET", e.toString());
             }
+
+            String resultJson = gson.toJson(recorrido);
 
             return recorrido;
         }

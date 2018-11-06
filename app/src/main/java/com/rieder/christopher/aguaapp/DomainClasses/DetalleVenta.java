@@ -2,20 +2,20 @@ package com.rieder.christopher.aguaapp.DomainClasses;
 
 public final class DetalleVenta {
 
-    private Producto producto;
+    private String producto;
     private int cantidad;
     private double precioUnitario;
     private int envasesDevueltos;
     private int envasesPrestados;
 
     public DetalleVenta(Producto key, Integer value) {
-        this.producto = key;
         this.cantidad = value;
-        this.precioUnitario = producto.getPrecioUnitario();
+        this.precioUnitario = key.getPrecioUnitario();
+        this.producto = key.getNombre();
     }
 
 
-    public Producto getProducto() {
+    public String getProducto() {
         return producto;
     }
 

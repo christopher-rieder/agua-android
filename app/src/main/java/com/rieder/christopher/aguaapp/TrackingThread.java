@@ -5,22 +5,14 @@ import android.util.Log;
 
 import org.ankit.gpslibrary.MyTracker;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-
 public class TrackingThread extends Thread {
 
     private double latitude;
     private double longitude;
     private Uri coordinates;
-    private File file;
     private VentaActivity ctx;
 
-    public TrackingThread(File file, VentaActivity ctx) {
-        this.file = file;
+    public TrackingThread(VentaActivity ctx) {
         this.ctx = ctx;
     }
 
@@ -45,16 +37,5 @@ public class TrackingThread extends Thread {
 
         coordinates = Uri.parse("geo:" + latitude + "," + longitude);
         Log.v("COORDINATES", latitude + "," + longitude);
-
-        try {
-            BufferedWriter out = new BufferedWriter(new FileWriter(file, true), 1024);
-            out.write(latitude + "," + longitude);
-            out.newLine();
-            out.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
