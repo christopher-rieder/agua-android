@@ -21,7 +21,6 @@ public class TemplateFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_template, container, false);
-        // FIXME: R.resources
         TextView nameTextView = rootView.findViewById(R.id.template_textView);
         nameTextView.setText("TODO: TODO");
         return rootView;

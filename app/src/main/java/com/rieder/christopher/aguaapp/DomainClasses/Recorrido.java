@@ -1,10 +1,10 @@
 package com.rieder.christopher.aguaapp.DomainClasses;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public final class Recorrido {
 
-    private final int recorridoID;
     private final String nombre;
     private final String fecha;
     private final int repartidorID;
@@ -14,8 +14,7 @@ public final class Recorrido {
     private int cantidadEnvasesVaciosFinal = 0;
     private ArrayList<Venta> ventas;
 
-    public Recorrido(int recorridoID, String nombre, String fecha, int repartidorID, int cantidadEnvasesLlenosInicial, int cantidadEnvasesVaciosInicial) {
-        this.recorridoID = recorridoID;
+    public Recorrido(String nombre, String fecha, int repartidorID, int cantidadEnvasesLlenosInicial, int cantidadEnvasesVaciosInicial) {
         this.nombre = nombre;
         this.fecha = fecha;
         this.repartidorID = repartidorID;
@@ -23,7 +22,7 @@ public final class Recorrido {
         this.cantidadEnvasesVaciosInicial = cantidadEnvasesVaciosInicial;
     }
 
-    public void buildVentas(ArrayList<Cliente> clientes){
+    public void buildVentas(List<Cliente> clientes) {
         this.ventas = new ArrayList<>();
         for (Cliente cliente : clientes) {
             Venta v = new Venta(cliente);

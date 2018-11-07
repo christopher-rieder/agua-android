@@ -4,13 +4,11 @@ public final class Producto {
 
     private final int productoID;
     private final String nombre;
-    private final int stock; //stock en deposito.
     private final double precioUnitario;
 
-    public Producto(int productoID, String nombre, int stock, double precioUnitario) {
+    public Producto(int productoID, String nombre, double precioUnitario) {
         this.productoID = productoID;
         this.nombre = nombre;
-        this.stock = stock;
         this.precioUnitario = precioUnitario;
     }
 
@@ -24,10 +22,6 @@ public final class Producto {
 
     public String getNombre() {
         return nombre;
-    }
-
-    public int getStock() {
-        return stock;
     }
 
 }
