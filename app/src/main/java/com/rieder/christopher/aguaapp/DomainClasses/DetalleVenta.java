@@ -14,7 +14,6 @@ public final class DetalleVenta {
         this.producto = key.getNombre();
     }
 
-
     public String getProducto() {
         return producto;
     }
@@ -33,5 +32,15 @@ public final class DetalleVenta {
 
     public int getCantidad() {
         return cantidad;
+    }
+
+    public void incrementar() {
+        this.cantidad += 1;
+    }
+
+    public void decrementar() {
+        if (this.cantidad > 0) {
+            this.cantidad -= 1;
+        }
     }
 }

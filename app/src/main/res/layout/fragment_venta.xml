@@ -11,9 +11,11 @@
         android:id="@+id/venta_nombre_cliente"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="16dp"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.DialogWindowTitle"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1"
@@ -23,9 +25,10 @@
         android:id="@+id/venta_domicilio_cliente"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/venta_nombre_cliente"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1"
@@ -36,8 +39,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="24dp"
         android:text="AGUA 20 LITROS"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/venta_domicilio_cliente"
         tools:layout_constraintLeft_creator="1"
@@ -45,25 +49,44 @@
         tools:text="AGUA 20 LITROS" />
 
     <TextView
-        android:id="@+id/venta_agua_cantidad"
+        android:id="@+id/venta_agua_comodato_cantidad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+        app:layout_constraintEnd_toStartOf="@+id/venta_agua_comodato_cantidad_texto"
         app:layout_constraintTop_toBottomOf="@+id/venta_agua_text"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1"
-        tools:text="3 ENVASES" />
+        tools:text="3" />
+
+    <TextView
+        android:id="@+id/venta_agua_comodato_cantidad_texto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="COMODATO"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+        app:layout_constraintEnd_toStartOf="@+id/venta_agua_precio"
+        app:layout_constraintTop_toBottomOf="@+id/venta_agua_text"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintTop_creator="1" />
 
     <TextView
         android:id="@+id/venta_agua_precio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="36dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/venta_agua_text"
+        app:layout_constraintStart_toEndOf="@+id/venta_agua_text"
+        app:layout_constraintTop_toBottomOf="@+id/venta_domicilio_cliente"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1"
         tools:text="$50" />
@@ -72,45 +95,228 @@
         android:id="@+id/venta_soda_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:text="SODA 1 LITRO"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/venta_agua_text"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+        app:layout_constraintEnd_toStartOf="@+id/venta_soda_precio"
+        app:layout_constraintTop_toBottomOf="@+id/venta_domicilio_cliente"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1"
         tools:text="SODA 1 LITRO" />
 
     <TextView
-        android:id="@+id/venta_soda_cantidad"
+        android:id="@+id/venta_soda_comodato_cantidad_texto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="COMODATO"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+        app:layout_constraintEnd_toStartOf="@+id/venta_soda_precio"
+        app:layout_constraintTop_toBottomOf="@+id/venta_soda_text"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintTop_creator="1" />
+
+    <TextView
+        android:id="@+id/venta_soda_comodato_cantidad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+        app:layout_constraintEnd_toStartOf="@+id/venta_soda_comodato_cantidad_texto"
         app:layout_constraintTop_toBottomOf="@+id/venta_soda_text"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1"
-        tools:text="6 ENVASES" />
+        tools:text="6" />
 
     <TextView
         android:id="@+id/venta_soda_precio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/venta_soda_text"
+        app:layout_constraintTop_toBottomOf="@+id/venta_domicilio_cliente"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1"
         tools:text="$10" />
+
+    <Button
+        android:id="@+id/button_incrementar_agua"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@android:color/holo_orange_dark"
+        android:text="+"
+        app:layout_constraintEnd_toStartOf="@+id/divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <Button
+        android:id="@+id/button_decrementar_agua"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@android:color/holo_orange_dark"
+        android:text="-"
+        app:layout_constraintEnd_toStartOf="@+id/divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_incrementar_agua" />
+
+    <Button
+        android:id="@+id/button_incrementar_soda"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:background="@android:color/holo_orange_dark"
+        android:text="+"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/divider"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
+    <Button
+        android:id="@+id/button_dencrementar_soda"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:background="@android:color/holo_orange_dark"
+        android:text="-"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/divider"
+        app:layout_constraintTop_toBottomOf="@+id/button_incrementar_soda" />
+
+    <Button
+        android:id="@+id/button5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="CONFIRMAR"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="1dp"
+        android:layout_height="160dp"
+        android:layout_marginTop="8dp"
+        android:background="?android:attr/listDivider"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/venta_domicilio_cliente" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:orientation="horizontal"
+        android:padding="0dp"
+        android:paddingLeft="0dp"
+        android:paddingTop="0dp"
+        android:paddingRight="0dp"
+        android:paddingBottom="0dp"
+        app:layout_constraintEnd_toStartOf="@+id/divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/venta_agua_comodato_cantidad_texto">
+
+        <TextView
+            android:id="@+id/venta_agua_cantidad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toStartOf="@+id/venta_agua_cantidad_text"
+            app:layout_constraintTop_toBottomOf="@+id/venta_agua_comodato_cantidad"
+            tools:layout_constraintLeft_creator="1"
+            tools:layout_constraintTop_creator="1"
+            tools:text="3" />
+
+        <TextView
+            android:id="@+id/venta_agua_cantidad_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="0dp"
+            android:layout_marginEnd="16dp"
+            android:text="ENVASES"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+            tools:layout_constraintLeft_creator="1"
+            tools:layout_constraintTop_creator="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/divider"
+        app:layout_constraintTop_toBottomOf="@+id/venta_soda_comodato_cantidad_texto">
+
+        <TextView
+            android:id="@+id/venta_soda_cantidad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+            android:textSize="30sp"
+            tools:layout_constraintLeft_creator="1"
+            tools:layout_constraintTop_creator="1"
+            tools:text="6" />
+
+        <TextView
+            android:id="@+id/venta_soda_cantidad_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="0dp"
+            android:layout_marginEnd="16dp"
+            android:text="ENVASES"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+            tools:layout_constraintLeft_creator="1"
+            tools:layout_constraintTop_creator="1" />
+
+    </LinearLayout>
 
 
 </android.support.constraint.ConstraintLayout>

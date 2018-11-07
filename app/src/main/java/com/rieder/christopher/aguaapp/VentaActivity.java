@@ -36,18 +36,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 public class VentaActivity extends AppCompatActivity {
 
     // Trailing slash is needed
-    public static final String BASE_URL = "http://api.myservice.com/";
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
-
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -163,13 +154,12 @@ public class VentaActivity extends AppCompatActivity {
         this.mViewPager.setCurrentItem(idx);
     }
 
-
     private class RetrieveRecorrido extends AsyncTask<String, Void, Recorrido> {
 
         @Override
         protected Recorrido doInBackground(String... urls) {
             ArrayList<Cliente> clientes = new ArrayList<>();
-            Recorrido recorrido = null;
+            Recorrido newRecorrido = null;
             int numeroRecorrido = 1; // TODO: OBTENER DE LA APP
             String BASE_URL = "http://192.168.0.16:3000/api/"; // TODO: VER EN DONDE PONER...
             Gson gson = new Gson();
@@ -179,7 +169,7 @@ public class VentaActivity extends AppCompatActivity {
                 URL url = new URL(BASE_URL + "recorrido/" + numeroRecorrido);
                 String jsonRecorridoResponse = makeHttpRequest(url);
                 Log.d("Response: ", jsonRecorridoResponse);
-                recorrido = gson.fromJson(jsonRecorridoResponse, Recorrido.class);
+                newRecorrido = gson.fromJson(jsonRecorridoResponse, Recorrido.class);
 
                 // GET AND BUILD CLIENTES ARRAYLIST ------------------------------------------------
                 URL url2 = new URL(BASE_URL + "clientes/" + numeroRecorrido);
@@ -191,11 +181,11 @@ public class VentaActivity extends AppCompatActivity {
                     Cliente cliente = gson.fromJson(jsonClientes.getJSONObject(i).toString(), Cliente.class);
                     clientes.add(cliente);
                 }
-                recorrido.buildVentas(clientes);
+                newRecorrido.buildVentas(clientes);
 
                 Producto agua = new Producto(1, "Agua 20 Litros", 200, 50);
                 Producto soda = new Producto(1, "Soda 1 Litro", 1000, 10);
-                for (Venta venta : recorrido.getVentas()) {
+                for (Venta venta : newRecorrido.getVentas()) {
                     Map<Producto, Integer> values = new HashMap<>();
 
                     Integer cantidadAgua = (int) Math.ceil(Math.random() * 3);
@@ -212,9 +202,10 @@ public class VentaActivity extends AppCompatActivity {
                 Log.e("ERROR EN HTTP GET", e.toString());
             }
 
-            String resultJson = gson.toJson(recorrido);
+            String resultJson = gson.toJson(newRecorrido);
 
-            return recorrido;
+
+            return newRecorrido;
         }
 
         /**
@@ -269,6 +260,7 @@ public class VentaActivity extends AppCompatActivity {
             // TODO: do something with the feed
             updateJsonData(feed);
             getLocation();
+            recorrido = feed;
         }
     }
 }

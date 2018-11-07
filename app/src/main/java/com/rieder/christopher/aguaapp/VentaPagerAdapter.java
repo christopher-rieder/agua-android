@@ -41,7 +41,6 @@ public class VentaPagerAdapter extends FragmentPagerAdapter {
         return idx;
     }
 
-
     @Override
     public Fragment getItem(int i) {
         VentaFragment rf = new VentaFragment();
