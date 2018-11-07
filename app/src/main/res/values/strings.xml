@@ -1,10 +1,13 @@
 <resources>
     <string name="app_name">AguaApp</string>
-    <string name="title_activity_recorrido">Recorrido</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
-    <string name="tab_text_3">Tab 3</string>
     <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_template">templateActivity</string>
+    <string name="agua_text">Agua - 20 Litros</string>
+    <string name="comodato_text">En Comodato</string>
+    <string name="soda_text">Soda - 1 Litro</string>
+    <string name="button_incrementar_text">+</string>
+    <string name="button_decrementar_text">-</string>
+    <string name="confirmar_text">CONFIRMAR</string>
+    <string name="envases_text">Envases</string>
+    <string name="cargando_tab_text">CARGANDO DATOS…</string>
 </resources>

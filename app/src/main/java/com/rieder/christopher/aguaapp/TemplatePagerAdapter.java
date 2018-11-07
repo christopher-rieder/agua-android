@@ -1,16 +1,12 @@
 package com.rieder.christopher.aguaapp;
 
 import android.content.Context;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.rieder.christopher.aguaapp.DomainClasses.Recorrido;
-
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 
 public class TemplatePagerAdapter extends FragmentPagerAdapter {

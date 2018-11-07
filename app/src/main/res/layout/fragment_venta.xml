@@ -40,13 +40,13 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="24dp"
-        android:text="AGUA 20 LITROS"
+        android:layout_marginStart="16dp"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/venta_domicilio_cliente"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1"
-        tools:text="AGUA 20 LITROS" />
+        android:text="@string/agua_text" />
 
     <TextView
         android:id="@+id/venta_agua_comodato_cantidad"
@@ -69,7 +69,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:text="COMODATO"
+        android:text="@string/comodato_text"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
         app:layout_constraintEnd_toStartOf="@+id/venta_agua_precio"
         app:layout_constraintTop_toBottomOf="@+id/venta_agua_text"
@@ -98,13 +98,12 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:text="SODA 1 LITRO"
+        android:text="@string/soda_text"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault"
         app:layout_constraintEnd_toStartOf="@+id/venta_soda_precio"
         app:layout_constraintTop_toBottomOf="@+id/venta_domicilio_cliente"
         tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintTop_creator="1"
-        tools:text="SODA 1 LITRO" />
+        tools:layout_constraintTop_creator="1" />
 
     <TextView
         android:id="@+id/venta_soda_comodato_cantidad_texto"
@@ -113,7 +112,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:text="COMODATO"
+        android:text="@string/comodato_text"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
         app:layout_constraintEnd_toStartOf="@+id/venta_soda_precio"
         app:layout_constraintTop_toBottomOf="@+id/venta_soda_text"
@@ -159,7 +158,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:background="@android:color/holo_orange_dark"
-        android:text="+"
+        android:text="@string/button_incrementar_text"
         app:layout_constraintEnd_toStartOf="@+id/divider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
@@ -175,7 +174,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:background="@android:color/holo_orange_dark"
-        android:text="-"
+        android:text="@string/button_decrementar_text"
         app:layout_constraintEnd_toStartOf="@+id/divider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_incrementar_agua" />
@@ -191,13 +190,13 @@
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
         android:background="@android:color/holo_orange_dark"
-        android:text="+"
+        android:text="@string/button_incrementar_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/divider"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
     <Button
-        android:id="@+id/button_dencrementar_soda"
+        android:id="@+id/button_decrementar_soda"
         style="@style/Widget.AppCompat.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -207,7 +206,7 @@
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
         android:background="@android:color/holo_orange_dark"
-        android:text="-"
+        android:text="@string/button_decrementar_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/divider"
         app:layout_constraintTop_toBottomOf="@+id/button_incrementar_soda" />
@@ -217,7 +216,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:text="CONFIRMAR"
+        android:text="@string/confirmar_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -273,9 +272,10 @@
             android:layout_gravity="center_vertical"
             android:layout_margin="0dp"
             android:layout_marginEnd="16dp"
-            android:text="ENVASES"
+            android:layout_marginRight="16dp"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault"
             tools:layout_constraintLeft_creator="1"
+            android:text="@string/envases_text"
             tools:layout_constraintTop_creator="1" />
     </LinearLayout>
 
@@ -302,6 +302,7 @@
             android:textSize="30sp"
             tools:layout_constraintLeft_creator="1"
             tools:layout_constraintTop_creator="1"
+            android:layout_marginRight="16dp"
             tools:text="6" />
 
         <TextView
@@ -311,9 +312,10 @@
             android:layout_gravity="center_vertical"
             android:layout_margin="0dp"
             android:layout_marginEnd="16dp"
-            android:text="ENVASES"
+            android:layout_marginRight="16dp"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault"
             tools:layout_constraintLeft_creator="1"
+            android:text="@string/envases_text"
             tools:layout_constraintTop_creator="1" />
 
     </LinearLayout>

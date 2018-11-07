@@ -5,12 +5,12 @@ import android.util.Log;
 
 import org.ankit.gpslibrary.MyTracker;
 
-public class TrackingThread extends Thread {
+public final class TrackingThread extends Thread {
 
     private double latitude;
     private double longitude;
     private Uri coordinates;
-    private VentaActivity ctx;
+    private final VentaActivity ctx;
 
     public TrackingThread(VentaActivity ctx) {
         this.ctx = ctx;

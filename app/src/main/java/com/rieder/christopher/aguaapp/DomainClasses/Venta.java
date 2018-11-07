@@ -24,7 +24,11 @@ public final class Venta {
         }
     }
 
-    public ArrayList<DetalleVenta> getDetallesVenta() {
-        return detallesVenta;
+    public DetalleVenta getSoda() { //TODO: Obtener de mejor manera
+        return detallesVenta.get(0);
+    }
+
+    public DetalleVenta getAgua() { //TODO: Obtener de mejor manera
+        return detallesVenta.get(1);
     }
 }

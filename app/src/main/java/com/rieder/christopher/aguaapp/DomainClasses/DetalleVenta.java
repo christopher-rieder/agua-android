@@ -2,16 +2,21 @@ package com.rieder.christopher.aguaapp.DomainClasses;
 
 public final class DetalleVenta {
 
-    private String producto;
+    private final String producto;
     private int cantidad;
-    private double precioUnitario;
-    private int envasesDevueltos;
-    private int envasesPrestados;
+    private final double precioUnitario;
 
-    public DetalleVenta(Producto key, Integer value) {
-        this.cantidad = value;
+    /* Envases que tiene el cliente en comodato actualmente.
+       Es decir, envases que tiene que devolver */
+    private final int envasesPrevios;
+
+    public DetalleVenta(Producto key, Integer envasesPrevios) {
         this.precioUnitario = key.getPrecioUnitario();
         this.producto = key.getNombre();
+        this.envasesPrevios = envasesPrevios;
+
+        // precargar cantidad, suponiendo que el cliente va a pedir la misma cantidad que antes
+        this.cantidad = envasesPrevios;
     }
 
     public String getProducto() {
@@ -22,16 +27,12 @@ public final class DetalleVenta {
         return precioUnitario;
     }
 
-    public int getEnvasesDevueltos() {
-        return envasesDevueltos;
-    }
-
-    public int getEnvasesPrestados() {
-        return envasesPrestados;
-    }
-
     public int getCantidad() {
         return cantidad;
+    }
+
+    public int getEnvasesPrevios() {
+        return envasesPrevios;
     }
 
     public void incrementar() {
