@@ -41,6 +41,20 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:backgroundTint="@color/design_default_color_primary"
+        app:layout_anchor="@+id/venta_view_pager"
+        app:layout_anchorGravity="right|bottom"
+        app:srcCompat="@android:drawable/ic_menu_mapmode" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/venta_fab2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/fab_margin"
+        app:backgroundTint="@color/colorPrimary"
+        app:layout_anchor="@+id/venta_view_pager"
+        app:layout_anchorGravity="left|bottom"
+        app:srcCompat="@android:drawable/ic_menu_mylocation" />
 
 </android.support.design.widget.CoordinatorLayout>

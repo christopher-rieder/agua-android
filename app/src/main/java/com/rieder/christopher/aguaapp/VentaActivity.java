@@ -59,8 +59,24 @@ public class VentaActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar.make(view, "Localizar cliente en mapa", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null)
+                        .show();
+            }
+        });
+
+        FloatingActionButton fab2 = findViewById(R.id.venta_fab2);
+        fab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Seleccionar cliente más cercano", Snackbar.LENGTH_LONG)
+                        .setAction("Action", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                VentaActivity.this.getLocation();
+                            }
+                        })
+                        .show();
             }
         });
     }
@@ -229,7 +245,6 @@ public class VentaActivity extends AppCompatActivity {
 
         protected void onPostExecute(Recorrido feed) {
             onJsonDataRetrieved(feed);
-            getLocation();
             recorrido = feed;
         }
     }
