@@ -15,16 +15,15 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".VentaActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".TemplateActivity"
+            android:label="@string/title_activity_template"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".TemplateActivity"
-            android:label="@string/title_activity_template"
-            android:theme="@style/AppTheme.NoActionBar" />
     </application>
-
 </manifest>

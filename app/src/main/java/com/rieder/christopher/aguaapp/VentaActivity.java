@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.jinais.gnlib.android.launcher.GNLauncher;
 import com.rieder.christopher.aguaapp.DomainClasses.Cliente;
 import com.rieder.christopher.aguaapp.DomainClasses.Producto;
 import com.rieder.christopher.aguaapp.DomainClasses.Recorrido;
@@ -35,18 +36,18 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class VentaActivity extends AppCompatActivity {
+public class VentaActivity extends AppCompatActivity implements IPayload {
 
     private Recorrido recorrido;
-    private int numeroTemplate = 1; // TODO: OBTENER DE LA APP
     private File file;
     private VentaPagerAdapter mAdapter;
     private ViewPager mViewPager;
+    private List<Cliente> clientes = new ArrayList<>();
 
     private static final int REQUEST_CODE_PERMISSION = 2;
     private String mPermission = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -61,8 +62,8 @@ public class VentaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venta);
 
-        RetrieveRecorrido task = new RetrieveRecorrido();
-        task.execute();
+        /*RetrieveRecorrido task = new RetrieveRecorrido();
+        task.execute();*/
 
         FloatingActionButton fab2 = findViewById(R.id.venta_fab2);
         fab2.setOnClickListener(new View.OnClickListener() {
@@ -71,6 +72,8 @@ public class VentaActivity extends AppCompatActivity {
                 VentaActivity.this.getLocation();
             }
         });
+
+        GNLauncher.get().ping(this);
     }
 
     private void onJsonDataRetrieved() {
@@ -123,26 +126,6 @@ public class VentaActivity extends AppCompatActivity {
             toast.show();
             return true;
         }
-        if (id == R.id.getRecorrido1) {
-            this.numeroTemplate = 1;
-            RetrieveRecorrido task = new RetrieveRecorrido();
-            task.execute();
-            return true;
-        }
-        if (id == R.id.getRecorrido2) {
-            this.numeroTemplate = 2;
-            RetrieveRecorrido task = new RetrieveRecorrido();
-            task.execute();
-            return true;
-
-        }
-        if (id == R.id.getRecorrido3) {
-            this.numeroTemplate = 3;
-            RetrieveRecorrido task = new RetrieveRecorrido();
-            task.execute();
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -158,6 +141,13 @@ public class VentaActivity extends AppCompatActivity {
                 }
                 break;
         }
+    }
+
+    @Override
+    public void payloadClientes(ArrayList<Cliente> clientes) {
+        this.clientes = clientes;
+        RetrieveRecorrido task = new RetrieveRecorrido();
+        task.execute();
     }
 
     private Uri getLocation() {
@@ -202,9 +192,6 @@ public class VentaActivity extends AppCompatActivity {
                 Producto soda = productos[1];
 
                 // GET AND BUILD CLIENTES & VENTAS -------------------------------------------------
-                URL url2 = new URL(BASE_URL + "clientes/" + numeroTemplate);
-                String jsonClientesResponse = makeHttpRequest(url2);
-                List<Cliente> clientes = Arrays.asList(gson.fromJson(jsonClientesResponse, Cliente[].class));
                 newRecorrido.buildVentas(clientes);
 
                 // TODO: PERMITIR AGREGAR O QUITAR CLIENTES. *LUEGO* DE CARGAR LOS DEL TEMPLATE.
@@ -277,14 +264,9 @@ public class VentaActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(Recorrido feed) {
-            if (numeroTemplate == 2) {
-                System.out.println("GOLA");
-            }
             recorrido = feed;
             onJsonDataRetrieved();
             writeJsonToFile();
         }
     }
 }
-
-

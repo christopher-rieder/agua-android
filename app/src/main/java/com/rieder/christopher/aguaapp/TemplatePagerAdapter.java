@@ -3,50 +3,33 @@ package com.rieder.christopher.aguaapp;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
-import org.json.JSONArray;
-import org.json.JSONException;
+import com.rieder.christopher.aguaapp.DomainClasses.TemplateRecorrido;
 
+public class TemplatePagerAdapter extends FragmentStatePagerAdapter {
 
-public class TemplatePagerAdapter extends FragmentPagerAdapter {
-    private JSONArray templates;
+    private TemplateRecorrido[] templates;
 
-    TemplatePagerAdapter(Context ctx, FragmentManager fm, JSONArray templates) {
+    TemplatePagerAdapter(Context ctx, FragmentManager fm, TemplateRecorrido[] templates) {
         super(fm);
         this.templates = templates;
     }
 
     @Override
     public int getCount() {
-        return templates.length();
+        return templates.length;
     }
 
     @Override
     public Fragment getItem(int i) {
-        TemplateFragment rf = new TemplateFragment();/*
-        int idx = 0;
-        Recorrido r = null;
-        try {
-            JSONObject client = recorridos.getJSONObject(i);
-            r = new Recorrido(client.toString(4));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
-        rf.setVenta(r);*/
+        TemplateFragment rf = new TemplateFragment();
+        rf.setTemplate(templates[i]);
         return rf;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        String str = "ERROR";
-        try {
-            str = templates.getJSONObject(position).getString("nombre"); //TODO: CHECK JSON BLABLABLA
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return str;
+        return templates[position].getNombre();
     }
 }
