@@ -42,11 +42,11 @@ import java.util.Map;
 
 public class VentaActivity extends AppCompatActivity {
 
-    private ViewPager mViewPager;
-    private TabLayout tabLayout;
-    VentaPagerAdapter mAdapter;
     private Recorrido recorrido;
+    private int numeroTemplate = 1; // TODO: OBTENER DE LA APP
     private File file;
+    private VentaPagerAdapter mAdapter;
+    private ViewPager mViewPager;
 
     private static final int REQUEST_CODE_PERMISSION = 2;
     private String mPermission = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -79,21 +79,15 @@ public class VentaActivity extends AppCompatActivity {
         mAdapter = new VentaPagerAdapter(this, getSupportFragmentManager(), recorrido);
         mViewPager.setAdapter(mAdapter);
 
-        tabLayout = findViewById(R.id.venta_tabs);
+        TabLayout tabLayout = findViewById(R.id.venta_tabs);
         tabLayout.setupWithViewPager(mViewPager);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-
-        mViewPager.setCurrentItem(5, true);
     }
 
     private void writeJsonToFile() {
         Gson gson = new Gson();
-
-
         file = new File("/mnt/sdcard/toto.json");
-
         String jsonResult = gson.toJson(recorrido);
-
         try {
             BufferedWriter out = new BufferedWriter(new FileWriter(file, false), 1024);
             out.write(jsonResult);
@@ -104,7 +98,6 @@ public class VentaActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -128,6 +121,25 @@ public class VentaActivity extends AppCompatActivity {
                     "Result Json escrito a: " + file.getAbsolutePath(),
                     Toast.LENGTH_SHORT);
             toast.show();
+            return true;
+        }
+        if (id == R.id.getRecorrido1) {
+            this.numeroTemplate = 1;
+            RetrieveRecorrido task = new RetrieveRecorrido();
+            task.execute();
+            return true;
+        }
+        if (id == R.id.getRecorrido2) {
+            this.numeroTemplate = 2;
+            RetrieveRecorrido task = new RetrieveRecorrido();
+            task.execute();
+            return true;
+
+        }
+        if (id == R.id.getRecorrido3) {
+            this.numeroTemplate = 3;
+            RetrieveRecorrido task = new RetrieveRecorrido();
+            task.execute();
             return true;
         }
 
@@ -168,11 +180,19 @@ public class VentaActivity extends AppCompatActivity {
         @Override
         protected Recorrido doInBackground(String... urls) {
             Recorrido newRecorrido = new Recorrido("GET FROM TEMPLATE", "TODAY", 1, 0, 60);
-            int numeroTemplate = 1; // TODO: OBTENER DE LA APP
+
+
             String BASE_URL = "http://192.168.0.16:3000/api/"; // TODO: VER EN DONDE PONER...
             Gson gson = new Gson();
-
             try {
+
+                URL checkLocalServer = new URL("http://192.168.0.16:3000/");
+                String hello_world = makeHttpRequest(checkLocalServer);
+
+                if (!hello_world.equals("Hello World!")) {
+                    BASE_URL = "http://tophercasa.ddns.net:3000/api/"; // TODO: VER EN DONDE PONER...
+                }
+
                 // GET AND BUILD PRODUCTOS ---------------------------------------------------------
                 // Hardcodeado a proposito. Si hay que agregar productos, hay que cambiar la UI
                 URL url3 = new URL(BASE_URL + "productos");
@@ -203,15 +223,9 @@ public class VentaActivity extends AppCompatActivity {
 
                     venta.buildDetalleVentas(values);
                 }
-
-
             } catch (Exception e) {
                 Log.e("ERROR EN HTTP GET", e.toString());
             }
-
-            String resultJson = gson.toJson(newRecorrido);
-
-
             return newRecorrido;
         }
 
@@ -263,6 +277,9 @@ public class VentaActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(Recorrido feed) {
+            if (numeroTemplate == 2) {
+                System.out.println("GOLA");
+            }
             recorrido = feed;
             onJsonDataRetrieved();
             writeJsonToFile();

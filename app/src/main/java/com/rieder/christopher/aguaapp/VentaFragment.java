@@ -18,13 +18,19 @@ import com.rieder.christopher.aguaapp.DomainClasses.Venta;
 public class VentaFragment extends Fragment {
 
     private Venta venta;
+    private int i;
+
+    public int getI() {
+        return i;
+    }
 
     public VentaFragment() {
         //empty fragment
     }
 
-    public void setRecorrido(Venta venta) {
+    public void setVenta(Venta venta, int i) {
         this.venta = venta;
+        this.i = i;
     }
 
     @SuppressLint("SetTextI18n")
@@ -56,7 +62,6 @@ public class VentaFragment extends Fragment {
         // set datos y handlers of soda
         DetalleVenta soda = this.venta.getSoda();
         OnClick sodaClickHandler = new OnClick(soda, venta_soda_cantidad);
-
 
         venta_soda_precio.setText("$" + soda.getPrecioUnitario());
         venta_soda_cantidad.setText("" + soda.getCantidad());

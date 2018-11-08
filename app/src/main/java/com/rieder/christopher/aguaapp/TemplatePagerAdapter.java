@@ -35,7 +35,7 @@ public class TemplatePagerAdapter extends FragmentPagerAdapter {
         }
 
 
-        rf.setRecorrido(r);*/
+        rf.setVenta(r);*/
         return rf;
     }
 

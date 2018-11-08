@@ -3,7 +3,7 @@ package com.rieder.christopher.aguaapp;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
 import com.rieder.christopher.aguaapp.DomainClasses.Recorrido;
@@ -12,14 +12,12 @@ import com.rieder.christopher.aguaapp.DomainClasses.Venta;
 import java.util.ArrayList;
 
 
-public class VentaPagerAdapter extends FragmentPagerAdapter {
+public class VentaPagerAdapter extends FragmentStatePagerAdapter {
 
-    // private Recorrido recorrido;
     private ArrayList<Venta> ventas;
 
     VentaPagerAdapter(Context ctx, FragmentManager fm, Recorrido recorrido) {
         super(fm);
-        // this.recorrido = recorrido;
         this.ventas = recorrido.getVentas();
     }
 
@@ -44,7 +42,7 @@ public class VentaPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int i) {
         VentaFragment rf = new VentaFragment();
-        rf.setRecorrido(ventas.get(i));
+        rf.setVenta(ventas.get(i), i);
         return rf;
     }
 
