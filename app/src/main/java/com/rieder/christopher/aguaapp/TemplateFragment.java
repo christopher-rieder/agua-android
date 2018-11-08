@@ -6,12 +6,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ListView;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.jinais.gnlib.android.launcher.GNLauncher;
+import com.rieder.christopher.aguaapp.DomainClasses.Cliente;
 import com.rieder.christopher.aguaapp.DomainClasses.TemplateRecorrido;
+
+import java.util.ArrayList;
 
 public class TemplateFragment extends Fragment {
 
@@ -24,32 +24,13 @@ public class TemplateFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_template, container, false);
-        TextView nameTextView = rootView.findViewById(R.id.template_textView);
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        nameTextView.setText(gson.toJson(template));
-        nameTextView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                // TODO: CREATE NEW VENTA_ACTIVITY CON EL TEMPLATE.
+        View rootView = inflater.inflate(R.layout.cliente_list_view, container, false);
 
-                GNLauncher launcher = GNLauncher.get();
-                IPayload proxy = (IPayload) launcher.getProxy(getContext(), IPayload.class, VentaActivity.class);
-                proxy.payloadClientes(template.getClientes());
+        final ArrayList<Cliente> clientes = template.getClientes();
 
-                /*Intent intent = new Intent(getActivity(), VentaActivity.class);
-                startActivity(intent);*/
-                return true;
-            }
-        });
-        /*
-
-        ClienteListAdapter itemsAdapter = new ClienteListAdapter(this.getContext(), template.getClientes());
-
-
-        ListView listView = rootView.findViewById(R.id.template_cliente_list);
+        ClienteListAdapter itemsAdapter = new ClienteListAdapter(this.getContext(), clientes);
+        ListView listView = rootView.findViewById(R.id.cliente_list_view);
         listView.setAdapter(itemsAdapter);
-*/
 
 
         return rootView;
