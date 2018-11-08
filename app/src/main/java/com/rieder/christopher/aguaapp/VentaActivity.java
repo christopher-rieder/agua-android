@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.rieder.christopher.aguaapp.DomainClasses.Cliente;
@@ -25,6 +25,10 @@ import com.rieder.christopher.aguaapp.DomainClasses.Venta;
 import org.ankit.gpslibrary.MyTracker;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -42,9 +46,14 @@ public class VentaActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     VentaPagerAdapter mAdapter;
     private Recorrido recorrido;
+    private File file;
 
     private static final int REQUEST_CODE_PERMISSION = 2;
     private String mPermission = Manifest.permission.ACCESS_FINE_LOCATION;
+
+    // TODO: ONRESUME ejecutar getLocation() . Cuando se abre la app luego de que se suspendio
+    // porque se apago el telefono, se cambio de app, etc. Aunque puede ser molesto cuando se vuelve
+    // luego de un intent a googlemaps.
 
 
     @Override
@@ -55,33 +64,16 @@ public class VentaActivity extends AppCompatActivity {
         RetrieveRecorrido task = new RetrieveRecorrido();
         task.execute();
 
-        FloatingActionButton fab = findViewById(R.id.venta_fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Localizar cliente en mapa", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null)
-                        .show();
-            }
-        });
-
         FloatingActionButton fab2 = findViewById(R.id.venta_fab2);
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Seleccionar cliente más cercano", Snackbar.LENGTH_LONG)
-                        .setAction("Action", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                VentaActivity.this.getLocation();
-                            }
-                        })
-                        .show();
+            public void onClick(View v) {
+                VentaActivity.this.getLocation();
             }
         });
     }
 
-    private void onJsonDataRetrieved(Recorrido recorrido) {
+    private void onJsonDataRetrieved() {
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.venta_view_pager);
         mAdapter = new VentaPagerAdapter(this, getSupportFragmentManager(), recorrido);
@@ -92,6 +84,27 @@ public class VentaActivity extends AppCompatActivity {
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
 
         mViewPager.setCurrentItem(5, true);
+    }
+
+    private void writeJsonToFile() {
+        Gson gson = new Gson();
+
+
+        file = new File("/mnt/sdcard/toto.json");
+
+        String jsonResult = gson.toJson(recorrido);
+
+        try {
+            BufferedWriter out = new BufferedWriter(new FileWriter(file, false), 1024);
+            out.write(jsonResult);
+            out.newLine();
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -109,7 +122,12 @@ public class VentaActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.menu_write_to_json_file) {
+            writeJsonToFile();
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "Result Json escrito a: " + file.getAbsolutePath(),
+                    Toast.LENGTH_SHORT);
+            toast.show();
             return true;
         }
 
@@ -130,7 +148,7 @@ public class VentaActivity extends AppCompatActivity {
         }
     }
 
-    private void getLocation() {
+    private Uri getLocation() {
         MyTracker tracker = new MyTracker(this);
         double latitud = tracker.getLatitude();
         double longitud = tracker.getLongitude();
@@ -140,6 +158,7 @@ public class VentaActivity extends AppCompatActivity {
 
         int idx = this.mAdapter.getIndexClosestToLocation(latitud, longitud);
         this.mViewPager.setCurrentItem(idx);
+        return coordinates;
     }
 
     private class RetrieveRecorrido extends AsyncTask<String, Void, Recorrido> {
@@ -244,8 +263,9 @@ public class VentaActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(Recorrido feed) {
-            onJsonDataRetrieved(feed);
             recorrido = feed;
+            onJsonDataRetrieved();
+            writeJsonToFile();
         }
     }
 }

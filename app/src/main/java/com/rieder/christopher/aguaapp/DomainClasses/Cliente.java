@@ -1,5 +1,7 @@
 package com.rieder.christopher.aguaapp.DomainClasses;
 
+import android.net.Uri;
+
 public final class Cliente {
 
     private final int clienteID;
@@ -48,5 +50,9 @@ public final class Cliente {
 
     public int getClienteID() {
         return clienteID;
+    }
+
+    public Uri getLocation() {
+        return Uri.parse("geo:" + latitud + "," + longitud);
     }
 }

@@ -1,8 +1,10 @@
 package com.rieder.christopher.aguaapp;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,6 +74,15 @@ public class VentaFragment extends Fragment {
         incrementarAgua.setOnClickListener(aguaClickHandler);
         decrementarAgua.setOnClickListener(aguaClickHandler);
 
+        FloatingActionButton fab = rootView.findViewById(R.id.venta_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, venta.getClienteLocation());
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
+            }
+        });
 
         return rootView;
     }
@@ -80,7 +91,7 @@ public class VentaFragment extends Fragment {
         private final DetalleVenta dv;
         private final TextView cantidadTextView;
 
-        public OnClick(DetalleVenta dv, TextView cantidadTextView) {
+        OnClick(DetalleVenta dv, TextView cantidadTextView) {
             this.dv = dv;
             this.cantidadTextView = cantidadTextView;
         }

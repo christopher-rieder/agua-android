@@ -1,5 +1,7 @@
 package com.rieder.christopher.aguaapp.DomainClasses;
 
+import android.net.Uri;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -30,5 +32,9 @@ public final class Venta {
 
     public DetalleVenta getAgua() { //TODO: Obtener de mejor manera
         return detallesVenta.get(1);
+    }
+
+    public Uri getClienteLocation() {
+        return cliente.getLocation();
     }
 }
