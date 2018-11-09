@@ -31,8 +31,6 @@ public class TemplateFragment extends Fragment {
         ClienteListAdapter itemsAdapter = new ClienteListAdapter(this.getContext(), clientes);
         ListView listView = rootView.findViewById(R.id.cliente_list_view);
         listView.setAdapter(itemsAdapter);
-
-
         return rootView;
     }
 

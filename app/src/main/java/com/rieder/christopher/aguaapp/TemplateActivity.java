@@ -6,8 +6,11 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.gson.Gson;
+import com.jinais.gnlib.android.launcher.GNLauncher;
 import com.rieder.christopher.aguaapp.DomainClasses.TemplateRecorrido;
 
 import java.io.BufferedReader;
@@ -25,12 +28,28 @@ public class TemplateActivity extends AppCompatActivity {
     private TemplateRecorrido[] templates;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_template);
 
         RetrieveTemplates task = new RetrieveTemplates();
         task.execute();
+
+        final Button seleccionarRecorridoBtn = findViewById(R.id.seleccionar_recorrido_button);
+
+        seleccionarRecorridoBtn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                GNLauncher launcher = GNLauncher.get();
+                IPayload proxy = (IPayload) launcher.getProxy(seleccionarRecorridoBtn.getContext(), IPayload.class, VentaActivity.class);
+                Log.d("CURRITEM", "" + mViewPager.getCurrentItem());
+
+                proxy.payloadClientes(templates[mViewPager.getCurrentItem()].getClientes());
+                return true;
+            }
+        });
+
+
     }
 
     private void onJsonDataRetrieved() {
@@ -43,7 +62,6 @@ public class TemplateActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
     }
-
 
     private class RetrieveTemplates extends AsyncTask<String, Void, TemplateRecorrido[]> {
 

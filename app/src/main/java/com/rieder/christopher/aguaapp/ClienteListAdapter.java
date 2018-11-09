@@ -28,11 +28,13 @@ public class ClienteListAdapter extends ArrayAdapter<Cliente> {
         }
         final Cliente currentCliente = getItem(position);
 
+        String firstLetter = currentCliente.getNombre().substring(0, 1);
+
         TextView nameTextView = listItemView.findViewById(R.id.cliente_list_nombre);
         nameTextView.setText(currentCliente.getNombre());
 
-        TextView letterCircleView = listItemView.findViewById(R.id.cliente_list_first_letter);
-        letterCircleView.setText(currentCliente.getNombre().charAt(0));
+        TextView letterCircleView = listItemView.findViewById(R.id.circle);
+        letterCircleView.setText(firstLetter);
 
         TextView numberTextView = listItemView.findViewById(R.id.cliente_list_domicilio);
         numberTextView.setText(currentCliente.getDomicilio());
