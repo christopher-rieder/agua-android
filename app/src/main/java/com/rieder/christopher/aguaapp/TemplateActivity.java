@@ -25,7 +25,7 @@ public class TemplateActivity extends AppCompatActivity {
 
     private TemplatePagerAdapter mAdapter;
     private ViewPager mViewPager;
-    private TemplateRecorrido[] templates;
+    private TemplateRecorrido[] templates; // As an array because is less code for Gson
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -36,20 +36,15 @@ public class TemplateActivity extends AppCompatActivity {
         task.execute();
 
         final Button seleccionarRecorridoBtn = findViewById(R.id.seleccionar_recorrido_button);
-
         seleccionarRecorridoBtn.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 GNLauncher launcher = GNLauncher.get();
                 IPayload proxy = (IPayload) launcher.getProxy(seleccionarRecorridoBtn.getContext(), IPayload.class, VentaActivity.class);
-                Log.d("CURRITEM", "" + mViewPager.getCurrentItem());
-
                 proxy.payloadClientes(templates[mViewPager.getCurrentItem()].getClientes());
                 return true;
             }
         });
-
-
     }
 
     private void onJsonDataRetrieved() {
@@ -65,33 +60,30 @@ public class TemplateActivity extends AppCompatActivity {
 
     private class RetrieveTemplates extends AsyncTask<String, Void, TemplateRecorrido[]> {
 
+        // TODO: REMOVE LATER, THIS IS FOR TESTING PURPOSES
+        private String BASE_URL = "http://192.168.0.16:3000/api/";
+
         @Override
         protected TemplateRecorrido[] doInBackground(String... urls) {
             TemplateRecorrido[] templatesFromServer;
 
-            String BASE_URL = "http://192.168.0.16:3000/api/"; // TODO: VER EN DONDE PONER...
-            Gson gson = new Gson();
             try {
-
+                // TODO: FOR TESTING PURPOSES. BUT SERVER DOWN MUST BE HANDLED CORRECTLY
                 URL checkLocalServer = new URL("http://192.168.0.16:3000/");
                 String hello_world = makeHttpRequest(checkLocalServer);
-
                 if (!hello_world.equals("Hello World!")) {
-                    BASE_URL = "http://tophercasa.ddns.net:3000/api/"; // TODO: VER EN DONDE PONER...
+                    BASE_URL = "http://tophercasa.ddns.net:3000/api/";
                 }
 
-                // GET AND BUILD PRODUCTOS ---------------------------------------------------------
-                // Hardcodeado a proposito. Si hay que agregar productos, hay que cambiar la UI
+                // OBTENER TEMPLATES DE RECORRIDOS, CON LOS CLIENTES ASOCIADOS, DE LA API HTTP
+                Gson gson = new Gson();
                 URL url3 = new URL(BASE_URL + "recorridoTemplates");
                 String jsonProductoResponse = makeHttpRequest(url3);
                 templatesFromServer = gson.fromJson(jsonProductoResponse, TemplateRecorrido[].class);
+                // AGREGAR O QUITAR CLIENTES SE VA A HACER EN OTRA VISTA.
+                // EN ESTA VISTA SE SELECCIONA UN TEMPLATE COMO BASE Y NADA MAS.
+                // SI HAY QUE HACER MODIFICACIONES, SE HACEN EN OTRO LADO.
 
-                // TODO: PERMITIR AGREGAR O QUITAR CLIENTES. *LUEGO* DE CARGAR LOS DEL TEMPLATE.
-
-                // TODO: ESTO SE HACE CUANDO ??? HAY QUE HABLAR CON EL REPARTIDOR
-                // GET ENVASES EN COMODATO DE CADA CLIENTE.
-                // COMO SE VAN A PODER AGREGAR O QUITAR CLIENTES, HAY QUE OBTENERLO DE LOS CLIENTES.
-                templates = templatesFromServer;
                 return templatesFromServer;
             } catch (Exception e) {
                 Log.e("ERROR EN HTTP GET", e.toString());

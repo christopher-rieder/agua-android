@@ -171,7 +171,6 @@ public class VentaActivity extends AppCompatActivity implements IPayload {
         protected Recorrido doInBackground(String... urls) {
             Recorrido newRecorrido = new Recorrido("GET FROM TEMPLATE", "TODAY", 1, 0, 60);
 
-
             String BASE_URL = "http://192.168.0.16:3000/api/"; // TODO: VER EN DONDE PONER...
             Gson gson = new Gson();
             try {
@@ -193,6 +192,11 @@ public class VentaActivity extends AppCompatActivity implements IPayload {
 
                 // GET AND BUILD CLIENTES & VENTAS -------------------------------------------------
                 newRecorrido.buildVentas(clientes);
+
+
+                // TODO: PERMITIR AGREGAR O QUITAR CLIENTES. *LUEGO* DE CARGAR LOS DEL TEMPLATE.
+                // ME PARECE QUE VA A SER MEJOR HACERLO EN VentaActivity.
+                // Y TENER UN FRAGMENT, ACTIVITY O LO QUE SEA PARA AGREGAR O QUITAR CLIENTES.
 
                 // TODO: PERMITIR AGREGAR O QUITAR CLIENTES. *LUEGO* DE CARGAR LOS DEL TEMPLATE.
 

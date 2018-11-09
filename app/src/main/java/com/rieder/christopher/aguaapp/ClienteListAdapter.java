@@ -17,7 +17,6 @@ public class ClienteListAdapter extends ArrayAdapter<Cliente> {
         super(context, 0, objects);
     }
 
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Check if the existing view is being reused, otherwise inflate the view
@@ -39,9 +38,6 @@ public class ClienteListAdapter extends ArrayAdapter<Cliente> {
         TextView numberTextView = listItemView.findViewById(R.id.cliente_list_domicilio);
         numberTextView.setText(currentCliente.getDomicilio());
 
-        // Return the whole list item layout (containing 2 TextViews and an ImageView)
-        // so that it can be shown in the ListView
         return listItemView;
     }
-
 }
