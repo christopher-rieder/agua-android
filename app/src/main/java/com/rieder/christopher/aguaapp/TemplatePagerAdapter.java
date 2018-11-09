@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.rieder.christopher.aguaapp.DomainClasses.TemplateRecorrido;
 
-public class TemplatePagerAdapter extends FragmentStatePagerAdapter {
+class TemplatePagerAdapter extends FragmentStatePagerAdapter {
 
     private TemplateRecorrido[] templates;
 

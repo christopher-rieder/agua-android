@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jinais.gnlib.android.launcher.GNLauncher;
@@ -17,6 +18,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -26,16 +28,17 @@ public class TemplateActivity extends AppCompatActivity {
     private TemplatePagerAdapter mAdapter;
     private ViewPager mViewPager;
     private TemplateRecorrido[] templates; // As an array because is less code for Gson
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_template);
-
-        RetrieveTemplates task = new RetrieveTemplates();
-        task.execute();
+        new RetrieveTemplates(this).execute();
 
         final Button seleccionarRecorridoBtn = findViewById(R.id.seleccionar_recorrido_button);
+
+        // Obtener lista de clientes gracias a la librería 'com.jinais.android:gnlib-android:1.1.0+@jar'
         seleccionarRecorridoBtn.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -47,21 +50,27 @@ public class TemplateActivity extends AppCompatActivity {
         });
     }
 
-    private void onJsonDataRetrieved() {
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = findViewById(R.id.template_view_pager);
-        mAdapter = new TemplatePagerAdapter(this, getSupportFragmentManager(), templates);
-        mViewPager.setAdapter(mAdapter);
-
-        TabLayout tabLayout = findViewById(R.id.template_tabs);
-        tabLayout.setupWithViewPager(mViewPager);
-        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-    }
-
-    private class RetrieveTemplates extends AsyncTask<String, Void, TemplateRecorrido[]> {
+    private static class RetrieveTemplates extends AsyncTask<String, Void, TemplateRecorrido[]> {
 
         // TODO: REMOVE LATER, THIS IS FOR TESTING PURPOSES
         private String BASE_URL = "http://192.168.0.16:3000/api/";
+
+        // SEE: https://stackoverflow.com/questions/44309241/warning-this-asynctask-class-should-be-static-or-leaks-might-occur
+        private final WeakReference<TemplateActivity> activityReference;
+
+        RetrieveTemplates(TemplateActivity context) {
+            activityReference = new WeakReference<>(context);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            TemplateActivity activity = activityReference.get();
+            if (activity == null || activity.isFinishing()) return;
+
+            Toast.makeText(activity,
+                    "Preparando para cargar datos...",
+                    Toast.LENGTH_SHORT).show();
+        }
 
         @Override
         protected TemplateRecorrido[] doInBackground(String... urls) {
@@ -91,9 +100,24 @@ public class TemplateActivity extends AppCompatActivity {
             return null;
         }
 
+        protected void onPostExecute(TemplateRecorrido[] feed) {
+            TemplateActivity activity = activityReference.get();
+            if (activity == null || activity.isFinishing()) return;
+
+            activity.templates = feed;
+            activity.mViewPager = activity.findViewById(R.id.template_view_pager);
+            activity.mAdapter = new TemplatePagerAdapter(activity, activity.getSupportFragmentManager(), activity.templates);
+            activity.mViewPager.setAdapter(activity.mAdapter);
+
+            activity.tabLayout = activity.findViewById(R.id.template_tabs);
+            activity.tabLayout.setupWithViewPager(activity.mViewPager);
+            activity.tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        }
+
         /**
          * Make an HTTP request to the given URL and return a String as the response.
          */
+        @SuppressWarnings("TryFinallyCanBeTryWithResources")
         private String makeHttpRequest(URL url) throws IOException {
             String jsonResponse = "";
             HttpURLConnection urlConnection = null;
@@ -136,11 +160,6 @@ public class TemplateActivity extends AppCompatActivity {
                 }
             }
             return output.toString();
-        }
-
-        protected void onPostExecute(TemplateRecorrido[] feed) {
-            templates = feed;
-            onJsonDataRetrieved();
         }
     }
 }

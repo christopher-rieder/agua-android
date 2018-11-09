@@ -1,6 +1,5 @@
 package com.rieder.christopher.aguaapp;
 
-import android.Manifest;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -33,6 +32,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -47,23 +47,17 @@ public class VentaActivity extends AppCompatActivity implements IPayload {
     private File file;
     private VentaPagerAdapter mAdapter;
     private ViewPager mViewPager;
+    private TabLayout tabLayout;
     private List<Cliente> clientes = new ArrayList<>();
 
     private static final int REQUEST_CODE_PERMISSION = 2;
-    private String mPermission = Manifest.permission.ACCESS_FINE_LOCATION;
 
-    // TODO: ONRESUME ejecutar getLocation() . Cuando se abre la app luego de que se suspendio
-    // porque se apago el telefono, se cambio de app, etc. Aunque puede ser molesto cuando se vuelve
-    // luego de un intent a googlemaps.
-
+    // TODO: Implementar Activity LifeCycle Methods
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venta);
-
-        /*RetrieveRecorrido task = new RetrieveRecorrido();
-        task.execute();*/
 
         FloatingActionButton fab2 = findViewById(R.id.venta_fab2);
         fab2.setOnClickListener(new View.OnClickListener() {
@@ -73,20 +67,18 @@ public class VentaActivity extends AppCompatActivity implements IPayload {
             }
         });
 
+        // Notificar que la actividad está lista para recibir el payload (List de clientes)
         GNLauncher.get().ping(this);
     }
 
-    private void onJsonDataRetrieved() {
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = findViewById(R.id.venta_view_pager);
-        mAdapter = new VentaPagerAdapter(this, getSupportFragmentManager(), recorrido);
-        mViewPager.setAdapter(mAdapter);
-
-        TabLayout tabLayout = findViewById(R.id.venta_tabs);
-        tabLayout.setupWithViewPager(mViewPager);
-        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+    @Override
+    public void payloadClientes(ArrayList<Cliente> clientes) {
+        this.clientes = clientes;
+        new RetrieveRecorrido(this).execute();
     }
 
+    // It isn't large enough to warrant an async task
+    // TODO: ESTO ES PARA DEBUG.
     private void writeJsonToFile() {
         Gson gson = new Gson();
         file = new File("/mnt/sdcard/toto.json");
@@ -143,13 +135,6 @@ public class VentaActivity extends AppCompatActivity implements IPayload {
         }
     }
 
-    @Override
-    public void payloadClientes(ArrayList<Cliente> clientes) {
-        this.clientes = clientes;
-        RetrieveRecorrido task = new RetrieveRecorrido();
-        task.execute();
-    }
-
     private Uri getLocation() {
         MyTracker tracker = new MyTracker(this);
         double latitud = tracker.getLatitude();
@@ -163,15 +148,32 @@ public class VentaActivity extends AppCompatActivity implements IPayload {
         return coordinates;
     }
 
-    private class RetrieveRecorrido extends AsyncTask<String, Void, Recorrido> {
+    private static class RetrieveRecorrido extends AsyncTask<String, Void, Recorrido> {
 
-        // TODO: ESTO IRIA EN TEMPLATE_RECORRIDO.
+        // TODO: REMOVE LATER, THIS IS FOR TESTING PURPOSES
+        private String BASE_URL = "http://192.168.0.16:3000/api/";
+        private List<Cliente> clientes;
+        private WeakReference<VentaActivity> activityReference;
+
+        RetrieveRecorrido(VentaActivity context) {
+            activityReference = new WeakReference<>(context);
+            clientes = context.clientes;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            VentaActivity activity = activityReference.get();
+            if (activity == null || activity.isFinishing()) return;
+
+            Toast.makeText(activity,
+                    "Preparando para cargar datos...",
+                    Toast.LENGTH_SHORT).show();
+        }
 
         @Override
         protected Recorrido doInBackground(String... urls) {
             Recorrido newRecorrido = new Recorrido("GET FROM TEMPLATE", "TODAY", 1, 0, 60);
 
-            String BASE_URL = "http://192.168.0.16:3000/api/"; // TODO: VER EN DONDE PONER...
             Gson gson = new Gson();
             try {
 
@@ -183,7 +185,7 @@ public class VentaActivity extends AppCompatActivity implements IPayload {
                 }
 
                 // GET AND BUILD PRODUCTOS ---------------------------------------------------------
-                // Hardcodeado a proposito. Si hay que agregar productos, hay que cambiar la UI
+                // Hardcodeado a propósito. Si hay que agregar productos, hay que cambiar la UI
                 URL url3 = new URL(BASE_URL + "productos");
                 String jsonProductoResponse = makeHttpRequest(url3);
                 Producto[] productos = gson.fromJson(jsonProductoResponse, Producto[].class);
@@ -220,9 +222,25 @@ public class VentaActivity extends AppCompatActivity implements IPayload {
             return newRecorrido;
         }
 
+        protected void onPostExecute(Recorrido feed) {
+            VentaActivity activity = activityReference.get();
+            if (activity == null || activity.isFinishing()) return;
+
+            activity.recorrido = feed;
+
+            activity.mViewPager = activity.findViewById(R.id.venta_view_pager);
+            activity.mAdapter = new VentaPagerAdapter(activity, activity.getSupportFragmentManager(), activity.recorrido);
+            activity.mViewPager.setAdapter(activity.mAdapter);
+
+            activity.tabLayout = activity.findViewById(R.id.venta_tabs);
+            activity.tabLayout.setupWithViewPager(activity.mViewPager);
+            activity.tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        }
+
         /**
          * Make an HTTP request to the given URL and return a String as the response.
          */
+        @SuppressWarnings("TryFinallyCanBeTryWithResources")
         private String makeHttpRequest(URL url) throws IOException {
             String jsonResponse = "";
             HttpURLConnection urlConnection = null;
@@ -265,12 +283,6 @@ public class VentaActivity extends AppCompatActivity implements IPayload {
                 }
             }
             return output.toString();
-        }
-
-        protected void onPostExecute(Recorrido feed) {
-            recorrido = feed;
-            onJsonDataRetrieved();
-            writeJsonToFile();
         }
     }
 }

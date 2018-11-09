@@ -3,6 +3,7 @@ package com.rieder.christopher.aguaapp.DomainClasses;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings({"FieldCanBeLocal", "unused"})
 public final class Recorrido {
 
     private final String nombre;
@@ -20,6 +21,14 @@ public final class Recorrido {
         this.repartidorID = repartidorID;
         this.cantidadEnvasesLlenosInicial = cantidadEnvasesLlenosInicial;
         this.cantidadEnvasesVaciosInicial = cantidadEnvasesVaciosInicial;
+    }
+
+    public void setCantidadEnvasesLlenosFinal(int cantidadEnvasesLlenosFinal) {
+        this.cantidadEnvasesLlenosFinal = cantidadEnvasesLlenosFinal;
+    }
+
+    public void setCantidadEnvasesVaciosFinal(int cantidadEnvasesVaciosFinal) {
+        this.cantidadEnvasesVaciosFinal = cantidadEnvasesVaciosFinal;
     }
 
     public void buildVentas(List<Cliente> clientes) {

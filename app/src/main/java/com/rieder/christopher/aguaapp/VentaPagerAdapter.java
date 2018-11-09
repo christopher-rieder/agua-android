@@ -4,15 +4,13 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.Log;
 
 import com.rieder.christopher.aguaapp.DomainClasses.Recorrido;
 import com.rieder.christopher.aguaapp.DomainClasses.Venta;
 
 import java.util.ArrayList;
 
-
-public class VentaPagerAdapter extends FragmentStatePagerAdapter {
+class VentaPagerAdapter extends FragmentStatePagerAdapter {
 
     private ArrayList<Venta> ventas;
 
@@ -21,8 +19,7 @@ public class VentaPagerAdapter extends FragmentStatePagerAdapter {
         this.ventas = recorrido.getVentas();
     }
 
-
-    public int getIndexClosestToLocation(double latitud, double longitud) {
+    int getIndexClosestToLocation(double latitud, double longitud) {
         int idx = 0;
         double shortestDistance = Double.MAX_VALUE;
 
@@ -33,7 +30,6 @@ public class VentaPagerAdapter extends FragmentStatePagerAdapter {
             if (distance < shortestDistance) {
                 shortestDistance = distance;
                 idx = i;
-                Log.i("COORDINATES", "Distance: " + distance + " ; index: " + i + "\n" + v.getCliente().getNombre());
             }
         }
         return idx;

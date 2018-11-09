@@ -1,6 +1,7 @@
 package com.rieder.christopher.aguaapp;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +12,15 @@ import com.rieder.christopher.aguaapp.DomainClasses.Cliente;
 
 import java.util.List;
 
-public class ClienteListAdapter extends ArrayAdapter<Cliente> {
+class ClienteListAdapter extends ArrayAdapter<Cliente> {
 
-    public ClienteListAdapter(Context context, List<Cliente> objects) {
+    ClienteListAdapter(Context context, List<Cliente> objects) {
         super(context, 0, objects);
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         // Check if the existing view is being reused, otherwise inflate the view
         View listItemView = convertView;
         if (listItemView == null) {
@@ -26,6 +28,7 @@ public class ClienteListAdapter extends ArrayAdapter<Cliente> {
                     R.layout.cliente_list_item, parent, false);
         }
         final Cliente currentCliente = getItem(position);
+        assert currentCliente != null;
 
         String firstLetter = currentCliente.getNombre().substring(0, 1);
 
