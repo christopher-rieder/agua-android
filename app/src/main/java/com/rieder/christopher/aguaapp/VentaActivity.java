@@ -1,5 +1,6 @@
 package com.rieder.christopher.aguaapp;
 
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -17,28 +18,24 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jinais.gnlib.android.launcher.GNLauncher;
-import com.rieder.christopher.aguaapp.DomainClasses.Cliente;
 import com.rieder.christopher.aguaapp.DomainClasses.Producto;
 import com.rieder.christopher.aguaapp.DomainClasses.Recorrido;
+import com.rieder.christopher.aguaapp.DomainClasses.TemplateRecorrido;
 import com.rieder.christopher.aguaapp.DomainClasses.Venta;
 
 import org.ankit.gpslibrary.MyTracker;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class VentaActivity extends AppCompatActivity implements IPayload {
@@ -48,7 +45,7 @@ public class VentaActivity extends AppCompatActivity implements IPayload {
     private VentaPagerAdapter mAdapter;
     private ViewPager mViewPager;
     private TabLayout tabLayout;
-    private List<Cliente> clientes = new ArrayList<>();
+    private Producto[] productos;
 
     private static final int REQUEST_CODE_PERMISSION = 2;
 
@@ -70,11 +67,49 @@ public class VentaActivity extends AppCompatActivity implements IPayload {
         // Notificar que la actividad está lista para recibir el payload (List de clientes)
         GNLauncher.get().ping(this);
     }
+    // TODO: PERMITIR AGREGAR O QUITAR CLIENTES. *LUEGO* DE CARGAR LOS DEL TEMPLATE.
+    // ME PARECE QUE VA A SER MEJOR HACERLO EN VentaActivity.
+    // Y TENER UN FRAGMENT, ACTIVITY O LO QUE SEA PARA AGREGAR O QUITAR CLIENTES.
 
+
+    // BUILD RECORRIDOS...
     @Override
-    public void payloadClientes(ArrayList<Cliente> clientes) {
-        this.clientes = clientes;
-        new RetrieveRecorrido(this).execute();
+    public void payloadClientes(TemplateRecorrido template, Producto[] productos) {
+
+        @SuppressLint("SimpleDateFormat")
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+
+        //to convert Date to String, use format method of SimpleDateFormat class.
+        String today = dateFormat.format(new Date());
+
+        this.recorrido = new Recorrido(template.getNombre(), today, 1, 0, 60);
+        recorrido.buildVentas(template.getClientes());
+
+        // FIXME: BORRAR CUANDO ESTO SE OBTENGA DE LA DB...
+        for (Venta venta : recorrido.getVentas()) {
+            Map<Producto, Integer> values = new HashMap<>();
+
+            Integer cantidadAgua = (int) Math.ceil(Math.random() * 3); //TODO: GET FROM DB
+            Integer cantidadSoda = (int) Math.ceil(Math.random() * 7); //TODO: GET FROM DB
+
+            values.put(productos[0], cantidadAgua);
+            values.put(productos[1], cantidadSoda);
+
+            venta.buildDetalleVentas(values);
+        }
+
+        // GET ENVASES EN COMODATO DE CADA CLIENTE.
+        new RetrieveRecorrido(this, template.getRecorridoTemplateID()).execute();
+    }
+
+    private void updateData() {
+        this.mViewPager = this.findViewById(R.id.venta_view_pager);
+        this.mAdapter = new VentaPagerAdapter(this, this.getSupportFragmentManager(), this.recorrido);
+        this.mViewPager.setAdapter(this.mAdapter);
+
+        this.tabLayout = this.findViewById(R.id.venta_tabs);
+        this.tabLayout.setupWithViewPager(this.mViewPager);
+        this.tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
     }
 
     // It isn't large enough to warrant an async task
@@ -152,12 +187,12 @@ public class VentaActivity extends AppCompatActivity implements IPayload {
 
         // TODO: REMOVE LATER, THIS IS FOR TESTING PURPOSES
         private String BASE_URL = "http://192.168.0.16:3000/api/";
-        private List<Cliente> clientes;
+        private int recorridoTemplateID;
         private WeakReference<VentaActivity> activityReference;
 
-        RetrieveRecorrido(VentaActivity context) {
+        RetrieveRecorrido(VentaActivity context, int recorridoTemplateID) {
             activityReference = new WeakReference<>(context);
-            clientes = context.clientes;
+            this.recorridoTemplateID = recorridoTemplateID;
         }
 
         @Override
@@ -165,57 +200,21 @@ public class VentaActivity extends AppCompatActivity implements IPayload {
             VentaActivity activity = activityReference.get();
             if (activity == null || activity.isFinishing()) return;
 
-            Toast.makeText(activity,
-                    "Preparando para cargar datos...",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "Preparando para cargar datos...", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         protected Recorrido doInBackground(String... urls) {
             Recorrido newRecorrido = new Recorrido("GET FROM TEMPLATE", "TODAY", 1, 0, 60);
-
-            Gson gson = new Gson();
             try {
-
                 URL checkLocalServer = new URL("http://192.168.0.16:3000/");
-                String hello_world = makeHttpRequest(checkLocalServer);
+                String hello_world = HttpHelper.makeHttpRequest(checkLocalServer);
 
                 if (!hello_world.equals("Hello World!")) {
                     BASE_URL = "http://tophercasa.ddns.net:3000/api/"; // TODO: VER EN DONDE PONER...
                 }
 
-                // GET AND BUILD PRODUCTOS ---------------------------------------------------------
-                // Hardcodeado a propósito. Si hay que agregar productos, hay que cambiar la UI
-                URL url3 = new URL(BASE_URL + "productos");
-                String jsonProductoResponse = makeHttpRequest(url3);
-                Producto[] productos = gson.fromJson(jsonProductoResponse, Producto[].class);
-                Producto agua = productos[0];
-                Producto soda = productos[1];
 
-                // GET AND BUILD CLIENTES & VENTAS -------------------------------------------------
-                newRecorrido.buildVentas(clientes);
-
-
-                // TODO: PERMITIR AGREGAR O QUITAR CLIENTES. *LUEGO* DE CARGAR LOS DEL TEMPLATE.
-                // ME PARECE QUE VA A SER MEJOR HACERLO EN VentaActivity.
-                // Y TENER UN FRAGMENT, ACTIVITY O LO QUE SEA PARA AGREGAR O QUITAR CLIENTES.
-
-                // TODO: PERMITIR AGREGAR O QUITAR CLIENTES. *LUEGO* DE CARGAR LOS DEL TEMPLATE.
-
-                // TODO: ESTO SE HACE CUANDO ??? HAY QUE HABLAR CON EL REPARTIDOR
-                // GET ENVASES EN COMODATO DE CADA CLIENTE.
-                // COMO SE VAN A PODER AGREGAR O QUITAR CLIENTES, HAY QUE OBTENERLO DE LOS CLIENTES.
-                for (Venta venta : newRecorrido.getVentas()) {
-                    Map<Producto, Integer> values = new HashMap<>();
-
-                    Integer cantidadAgua = (int) Math.ceil(Math.random() * 3); //TODO: GET FROM DB
-                    Integer cantidadSoda = (int) Math.ceil(Math.random() * 7); //TODO: GET FROM DB
-
-                    values.put(soda, cantidadSoda);
-                    values.put(agua, cantidadAgua);
-
-                    venta.buildDetalleVentas(values);
-                }
             } catch (Exception e) {
                 Log.e("ERROR EN HTTP GET", e.toString());
             }
@@ -225,64 +224,7 @@ public class VentaActivity extends AppCompatActivity implements IPayload {
         protected void onPostExecute(Recorrido feed) {
             VentaActivity activity = activityReference.get();
             if (activity == null || activity.isFinishing()) return;
-
-            activity.recorrido = feed;
-
-            activity.mViewPager = activity.findViewById(R.id.venta_view_pager);
-            activity.mAdapter = new VentaPagerAdapter(activity, activity.getSupportFragmentManager(), activity.recorrido);
-            activity.mViewPager.setAdapter(activity.mAdapter);
-
-            activity.tabLayout = activity.findViewById(R.id.venta_tabs);
-            activity.tabLayout.setupWithViewPager(activity.mViewPager);
-            activity.tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-        }
-
-        /**
-         * Make an HTTP request to the given URL and return a String as the response.
-         */
-        @SuppressWarnings("TryFinallyCanBeTryWithResources")
-        private String makeHttpRequest(URL url) throws IOException {
-            String jsonResponse = "";
-            HttpURLConnection urlConnection = null;
-            InputStream inputStream = null;
-            try {
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.setReadTimeout(10000 /* milliseconds */);
-                urlConnection.setConnectTimeout(15000 /* milliseconds */);
-                urlConnection.connect();
-                inputStream = urlConnection.getInputStream();
-                jsonResponse = readFromStream(inputStream);
-            } catch (IOException e) {
-                Log.d("ERROR/HTTP-REQUEST:", e.toString());
-            } finally {
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
-                if (inputStream != null) {
-                    // function must handle java.io.IOException here
-                    inputStream.close();
-                }
-            }
-            return jsonResponse;
-        }
-
-        /**
-         * Convert the {@link InputStream} into a String which contains the
-         * whole JSON response from the server.
-         */
-        private String readFromStream(InputStream inputStream) throws IOException {
-            StringBuilder output = new StringBuilder();
-            if (inputStream != null) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));
-                BufferedReader reader = new BufferedReader(inputStreamReader);
-                String line = reader.readLine();
-                while (line != null) {
-                    output.append(line);
-                    line = reader.readLine();
-                }
-            }
-            return output.toString();
+            activity.updateData();
         }
     }
 }

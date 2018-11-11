@@ -12,22 +12,18 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jinais.gnlib.android.launcher.GNLauncher;
+import com.rieder.christopher.aguaapp.DomainClasses.Producto;
 import com.rieder.christopher.aguaapp.DomainClasses.TemplateRecorrido;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.Charset;
 
 public class TemplateActivity extends AppCompatActivity {
 
     private TemplatePagerAdapter mAdapter;
     private ViewPager mViewPager;
     private TemplateRecorrido[] templates; // As an array because is less code for Gson
+    private Producto[] productos;
     private TabLayout tabLayout;
 
     @Override
@@ -44,13 +40,33 @@ public class TemplateActivity extends AppCompatActivity {
             public boolean onLongClick(View v) {
                 GNLauncher launcher = GNLauncher.get();
                 IPayload proxy = (IPayload) launcher.getProxy(seleccionarRecorridoBtn.getContext(), IPayload.class, VentaActivity.class);
-                proxy.payloadClientes(templates[mViewPager.getCurrentItem()].getClientes());
+                TemplateRecorrido currTemplate = templates[mViewPager.getCurrentItem()];
+
+                proxy.payloadClientes(currTemplate, productos);
                 return true;
             }
         });
     }
 
-    private static class RetrieveTemplates extends AsyncTask<String, Void, TemplateRecorrido[]> {
+    private void updateData(String[] feed) {
+        // process feed.
+        String jsonRecorridoTemplate = feed[0];
+        String jsonProductos = feed[1];
+
+        Gson gson = new Gson();
+        this.templates = gson.fromJson(jsonRecorridoTemplate, TemplateRecorrido[].class);
+        this.productos = gson.fromJson(jsonProductos, Producto[].class);
+
+        this.mViewPager = this.findViewById(R.id.template_view_pager);
+        this.mAdapter = new TemplatePagerAdapter(this, this.getSupportFragmentManager(), this.templates);
+        this.mViewPager.setAdapter(this.mAdapter);
+
+        this.tabLayout = this.findViewById(R.id.template_tabs);
+        this.tabLayout.setupWithViewPager(this.mViewPager);
+        this.tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+    }
+
+    private static class RetrieveTemplates extends AsyncTask<String, Void, String[]> {
 
         // TODO: REMOVE LATER, THIS IS FOR TESTING PURPOSES
         private String BASE_URL = "http://192.168.0.16:3000/api/";
@@ -73,93 +89,33 @@ public class TemplateActivity extends AppCompatActivity {
         }
 
         @Override
-        protected TemplateRecorrido[] doInBackground(String... urls) {
-            TemplateRecorrido[] templatesFromServer;
-
+        protected String[] doInBackground(String... urls) {
             try {
                 // TODO: FOR TESTING PURPOSES. BUT SERVER DOWN MUST BE HANDLED CORRECTLY
                 URL checkLocalServer = new URL("http://192.168.0.16:3000/");
-                String hello_world = makeHttpRequest(checkLocalServer);
+                String hello_world = HttpHelper.makeHttpRequest(checkLocalServer);
                 if (!hello_world.equals("Hello World!")) {
                     BASE_URL = "http://tophercasa.ddns.net:3000/api/";
                 }
 
                 // OBTENER TEMPLATES DE RECORRIDOS, CON LOS CLIENTES ASOCIADOS, DE LA API HTTP
-                Gson gson = new Gson();
-                URL url3 = new URL(BASE_URL + "recorridoTemplates");
-                String jsonProductoResponse = makeHttpRequest(url3);
-                templatesFromServer = gson.fromJson(jsonProductoResponse, TemplateRecorrido[].class);
-                // AGREGAR O QUITAR CLIENTES SE VA A HACER EN OTRA VISTA.
-                // EN ESTA VISTA SE SELECCIONA UN TEMPLATE COMO BASE Y NADA MAS.
-                // SI HAY QUE HACER MODIFICACIONES, SE HACEN EN OTRO LADO.
+                URL getRecorridoTemplates = new URL(BASE_URL + "recorridoTemplates");
+                String jsonRecorridoTemplate = HttpHelper.makeHttpRequest(getRecorridoTemplates);
+                // OBTENER LOS PRODUCTOS, PARA PASAR LUEGO COMO DATOS A LA VENTA ACTIVITY.
+                URL getProductos = new URL(BASE_URL + "productos");
+                String jsonProductos = HttpHelper.makeHttpRequest(getProductos);
 
-                return templatesFromServer;
+                return new String[]{jsonRecorridoTemplate, jsonProductos};
             } catch (Exception e) {
                 Log.e("ERROR EN HTTP GET", e.toString());
             }
             return null;
         }
 
-        protected void onPostExecute(TemplateRecorrido[] feed) {
+        protected void onPostExecute(String[] feed) {
             TemplateActivity activity = activityReference.get();
             if (activity == null || activity.isFinishing()) return;
-
-            activity.templates = feed;
-            activity.mViewPager = activity.findViewById(R.id.template_view_pager);
-            activity.mAdapter = new TemplatePagerAdapter(activity, activity.getSupportFragmentManager(), activity.templates);
-            activity.mViewPager.setAdapter(activity.mAdapter);
-
-            activity.tabLayout = activity.findViewById(R.id.template_tabs);
-            activity.tabLayout.setupWithViewPager(activity.mViewPager);
-            activity.tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-        }
-
-        /**
-         * Make an HTTP request to the given URL and return a String as the response.
-         */
-        @SuppressWarnings("TryFinallyCanBeTryWithResources")
-        private String makeHttpRequest(URL url) throws IOException {
-            String jsonResponse = "";
-            HttpURLConnection urlConnection = null;
-            InputStream inputStream = null;
-            try {
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.setReadTimeout(10000 /* milliseconds */);
-                urlConnection.setConnectTimeout(15000 /* milliseconds */);
-                urlConnection.connect();
-                inputStream = urlConnection.getInputStream();
-                jsonResponse = readFromStream(inputStream);
-            } catch (IOException e) {
-                Log.d("ERROR/HTTP-REQUEST:", e.toString());
-            } finally {
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
-                if (inputStream != null) {
-                    // function must handle java.io.IOException here
-                    inputStream.close();
-                }
-            }
-            return jsonResponse;
-        }
-
-        /**
-         * Convert the {@link InputStream} into a String which contains the
-         * whole JSON response from the server.
-         */
-        private String readFromStream(InputStream inputStream) throws IOException {
-            StringBuilder output = new StringBuilder();
-            if (inputStream != null) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));
-                BufferedReader reader = new BufferedReader(inputStreamReader);
-                String line = reader.readLine();
-                while (line != null) {
-                    output.append(line);
-                    line = reader.readLine();
-                }
-            }
-            return output.toString();
+            activity.updateData(feed);
         }
     }
 }
