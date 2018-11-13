@@ -10,7 +10,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
 
-class HttpHelper {
+final class HttpHelper {
+
+    // TODO: REMOVE LATER, THIS IS FOR TESTING PURPOSES
+    static final String BASE_URL = "http://192.168.0.16:3000/api/";
+
     /**
      * Make an HTTP request to the given URL and return a String as the response.
      */

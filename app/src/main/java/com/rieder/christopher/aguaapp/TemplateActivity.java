@@ -68,9 +68,6 @@ public class TemplateActivity extends AppCompatActivity {
 
     private static class RetrieveTemplates extends AsyncTask<String, Void, String[]> {
 
-        // TODO: REMOVE LATER, THIS IS FOR TESTING PURPOSES
-        private String BASE_URL = "http://192.168.0.16:3000/api/";
-
         // SEE: https://stackoverflow.com/questions/44309241/warning-this-asynctask-class-should-be-static-or-leaks-might-occur
         private final WeakReference<TemplateActivity> activityReference;
 
@@ -91,7 +88,7 @@ public class TemplateActivity extends AppCompatActivity {
         @Override
         protected String[] doInBackground(String... urls) {
             try {
-                // TODO: FOR TESTING PURPOSES. BUT SERVER DOWN MUST BE HANDLED CORRECTLY
+                String BASE_URL = HttpHelper.BASE_URL;
                 URL checkLocalServer = new URL("http://192.168.0.16:3000/");
                 String hello_world = HttpHelper.makeHttpRequest(checkLocalServer);
                 if (!hello_world.equals("Hello World!")) {
@@ -107,6 +104,7 @@ public class TemplateActivity extends AppCompatActivity {
 
                 return new String[]{jsonRecorridoTemplate, jsonProductos};
             } catch (Exception e) {
+                // TODO: FOR TESTING PURPOSES. BUT SERVER DOWN MUST BE HANDLED CORRECTLY
                 Log.e("ERROR EN HTTP GET", e.toString());
             }
             return null;
