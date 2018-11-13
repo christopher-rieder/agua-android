@@ -13,9 +13,11 @@ import java.util.ArrayList;
 class VentaPagerAdapter extends FragmentStatePagerAdapter {
 
     private ArrayList<Venta> ventas;
+    private Recorrido recorrido;
 
     VentaPagerAdapter(Context ctx, FragmentManager fm, Recorrido recorrido) {
         super(fm);
+        this.recorrido = recorrido;
         this.ventas = recorrido.getVentas();
     }
 
@@ -37,18 +39,26 @@ class VentaPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int i) {
+        if (i == 0) {
+            RecorridoFragment rf = new RecorridoFragment();
+            rf.setRecorrido(this.recorrido);
+            return rf;
+        }
         VentaFragment rf = new VentaFragment();
-        rf.setVenta(ventas.get(i), i);
+        rf.setVenta(ventas.get(i - 1), i - 1);
         return rf;
     }
 
     @Override
     public int getCount() {
-        return ventas.size();
+        return ventas.size() + 1;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return ventas.get(position).getCliente().getNombre();
+        if (position == 0) {
+            return "RECORRIDO";
+        }
+        return ventas.get(position - 1).getCliente().getNombre();
     }
 }
