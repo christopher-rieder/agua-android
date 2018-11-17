@@ -7,4 +7,9 @@
         android:orderInCategory="100"
         android:title="@string/menu_write_to_json_file"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_add_cliente"
+        android:orderInCategory="100"
+        android:title="ADDCLIENTE"
+        app:showAsAction="never" />
 </menu>

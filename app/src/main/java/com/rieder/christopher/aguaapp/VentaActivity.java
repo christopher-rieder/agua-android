@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jinais.gnlib.android.launcher.GNLauncher;
+import com.rieder.christopher.aguaapp.DomainClasses.Cliente;
 import com.rieder.christopher.aguaapp.DomainClasses.EnvasesEnComodato;
 import com.rieder.christopher.aguaapp.DomainClasses.Producto;
 import com.rieder.christopher.aguaapp.DomainClasses.Recorrido;
@@ -159,6 +160,18 @@ public class VentaActivity extends AppCompatActivity implements IPayload {
                     Toast.LENGTH_SHORT);
             toast.show();
             return true;
+        } else if (id == R.id.menu_add_cliente) {
+            Cliente c = new Cliente(3234, "TOTO", "LAS HERAS 933", "333", 22, 33);
+            Venta v = new Venta(c);
+            Map<Producto, Integer> values = new HashMap<>();
+
+            values.put(productos[0], 0);
+            values.put(productos[1], 0);
+            v.buildDetalleVentas(values);
+
+            this.recorrido.getVentas().add(v);
+
+            mAdapter.notifyDataSetChanged();
         }
         return super.onOptionsItemSelected(item);
     }
