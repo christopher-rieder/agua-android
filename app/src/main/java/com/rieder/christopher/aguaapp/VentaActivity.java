@@ -205,7 +205,9 @@ public class VentaActivity extends AppCompatActivity implements IPayload, Recorr
 
     @Override
     public void onVentaSelected(int position) {
-        this.mViewPager.setCurrentItem(position + 1);
+        mAdapter.setCurrIndex(position);
+        mAdapter.notifyDataSetChanged();
+        mViewPager.setCurrentItem(VentaPagerAdapter.TAB_INDEX_VENTA);
     }
 
     private static class RetrieveRecorrido extends AsyncTask<String, Void, String[]> {
