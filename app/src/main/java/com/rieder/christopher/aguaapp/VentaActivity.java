@@ -40,7 +40,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class VentaActivity extends AppCompatActivity implements IPayload {
+public class VentaActivity extends AppCompatActivity implements IPayload, RecorridoFragment.OnVentaClickListener {
 
     private Recorrido recorrido;
     private File file;
@@ -201,6 +201,11 @@ public class VentaActivity extends AppCompatActivity implements IPayload {
         int idx = this.mAdapter.getIndexClosestToLocation(latitud, longitud);
         this.mViewPager.setCurrentItem(idx);
         return coordinates;
+    }
+
+    @Override
+    public void onVentaSelected(int position) {
+        this.mViewPager.setCurrentItem(position + 1);
     }
 
     private static class RetrieveRecorrido extends AsyncTask<String, Void, String[]> {
