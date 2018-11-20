@@ -18,19 +18,13 @@ import com.rieder.christopher.aguaapp.DomainClasses.Venta;
 public class VentaFragment extends Fragment {
 
     private Venta venta;
-    private int i;
-
-    public int getI() {
-        return i;
-    }
 
     public VentaFragment() {
         //empty fragment
     }
 
-    public void setVenta(Venta venta, int i) {
+    public void setVenta(Venta venta) {
         this.venta = venta;
-        this.i = i;
     }
 
     @SuppressLint("SetTextI18n")
