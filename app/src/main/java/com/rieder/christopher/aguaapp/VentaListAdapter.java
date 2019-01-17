@@ -35,6 +35,9 @@ public class VentaListAdapter extends ArrayAdapter<DetalleVenta> {
         assert dv != null;
 
         // SET TEXTVIEWS WITH DETALLE_VENTA DATA
+        TextView venta_producto_nombre = listItemView.findViewById(R.id.venta_producto_nombre);
+        venta_producto_nombre.setText("" + dv.getProducto());
+
         TextView venta_producto_cantidad = listItemView.findViewById(R.id.venta_cantidad);
         venta_producto_cantidad.setText("" + dv.getCantidad());
 

@@ -62,7 +62,7 @@
         tools:text="$50" />
 
     <TextView
-        android:id="@+id/venta_producto_text"
+        android:id="@+id/venta_producto_nombre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -83,7 +83,7 @@
         android:text="@string/comodato_text"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
         app:layout_constraintEnd_toStartOf="@+id/venta_comodato_cantidad"
-        app:layout_constraintTop_toBottomOf="@+id/venta_producto_text"
+        app:layout_constraintTop_toBottomOf="@+id/venta_producto_nombre"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1" />
 
@@ -93,8 +93,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
-        app:layout_constraintEnd_toEndOf="@+id/venta_producto_text"
-        app:layout_constraintTop_toBottomOf="@+id/venta_producto_text"
+        app:layout_constraintEnd_toEndOf="@+id/venta_producto_nombre"
+        app:layout_constraintTop_toBottomOf="@+id/venta_producto_nombre"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintTop_creator="1"
         tools:text="3" />
