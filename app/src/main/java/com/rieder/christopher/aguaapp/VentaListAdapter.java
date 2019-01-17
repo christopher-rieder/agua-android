@@ -42,13 +42,13 @@ public class VentaListAdapter extends ArrayAdapter<DetalleVenta> {
         venta_producto_cantidad.setText("" + dv.getCantidad());
 
         TextView venta_producto_precio = listItemView.findViewById(R.id.venta_precio);
-        venta_producto_precio.setText("$" + dv.getPrecioUnitario());
+        venta_producto_precio.setText("$" + dv.getPrecioUnitario() * dv.getCantidad());
 
         TextView venta_producto_comodato = listItemView.findViewById(R.id.venta_comodato_cantidad);
         venta_producto_comodato.setText("" + dv.getEnvasesPrevios());
 
         // SET CLICK HANDLERS
-        OnClick clickHandler = new OnClick(dv, venta_producto_cantidad);
+        OnClick clickHandler = new OnClick(dv, venta_producto_cantidad, venta_producto_precio);
 
         Button incrementar = listItemView.findViewById(R.id.venta_button_incrementar);
         incrementar.setOnClickListener(clickHandler);
@@ -62,10 +62,12 @@ public class VentaListAdapter extends ArrayAdapter<DetalleVenta> {
     private final class OnClick implements View.OnClickListener {
         private final DetalleVenta dv;
         private final TextView cantidadTextView;
+        private final TextView precioTotal;
 
-        OnClick(DetalleVenta dv, TextView cantidadTextView) {
+        OnClick(DetalleVenta dv, TextView cantidadTextView, TextView precioTotal) {
             this.dv = dv;
             this.cantidadTextView = cantidadTextView;
+            this.precioTotal = precioTotal;
         }
 
         @SuppressLint("SetTextI18n")
@@ -80,6 +82,7 @@ public class VentaListAdapter extends ArrayAdapter<DetalleVenta> {
                 this.dv.decrementar();
             }
             this.cantidadTextView.setText("" + dv.getCantidad());
+            this.precioTotal.setText("$" + dv.getPrecioUnitario() * dv.getCantidad());
         }
     }
 }
