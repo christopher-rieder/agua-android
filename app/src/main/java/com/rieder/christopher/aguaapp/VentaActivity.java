@@ -231,7 +231,7 @@ public class VentaActivity extends AppCompatActivity implements IPayload, Recorr
         @Override
         protected String[] doInBackground(String... urls) {
             try {
-                URL checkLocalServer = new URL("http://192.168.0.16:3000/");
+                URL checkLocalServer = new URL(HttpHelper.BASE_URL_TEST);
                 String hello_world = HttpHelper.makeHttpRequest(checkLocalServer);
 
                 String BASE_URL = HttpHelper.BASE_URL;
@@ -279,7 +279,7 @@ public class VentaActivity extends AppCompatActivity implements IPayload, Recorr
         @Override
         protected String[] doInBackground(String... urls) {
             try {
-                URL checkLocalServer = new URL("http://192.168.0.16:3000/");
+                URL checkLocalServer = new URL(HttpHelper.BASE_URL_TEST);
                 String hello_world = HttpHelper.makeHttpRequest(checkLocalServer);
 
                 String BASE_URL = HttpHelper.BASE_URL;

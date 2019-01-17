@@ -26,12 +26,8 @@ public final class Venta {
         }
     }
 
-    public DetalleVenta getSoda() { //TODO: Obtener de mejor manera
-        return detallesVenta.get(1);
-    }
-
-    public DetalleVenta getAgua() { //TODO: Obtener de mejor manera
-        return detallesVenta.get(0);
+    public ArrayList<DetalleVenta> getDetallesVenta() {
+        return detallesVenta;
     }
 
     public Uri getClienteLocation() {

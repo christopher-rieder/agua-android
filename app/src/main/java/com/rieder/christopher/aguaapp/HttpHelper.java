@@ -13,7 +13,8 @@ import java.nio.charset.Charset;
 final class HttpHelper {
 
     // TODO: REMOVE LATER, THIS IS FOR TESTING PURPOSES
-    static final String BASE_URL = "http://192.168.0.16:3000/api/";
+    static final String BASE_URL_TEST = "http://192.168.0.15:3000/";
+    static final String BASE_URL = "http://192.168.0.15:3000/api/";
 
     /**
      * Make an HTTP request to the given URL and return a String as the response.

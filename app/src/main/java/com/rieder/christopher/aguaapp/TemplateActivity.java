@@ -89,7 +89,7 @@ public class TemplateActivity extends AppCompatActivity {
         protected String[] doInBackground(String... urls) {
             try {
                 String BASE_URL = HttpHelper.BASE_URL;
-                URL checkLocalServer = new URL("http://192.168.0.16:3000/");
+                URL checkLocalServer = new URL(HttpHelper.BASE_URL_TEST);
                 String hello_world = HttpHelper.makeHttpRequest(checkLocalServer);
                 if (!hello_world.equals("Hello World!")) {
                     BASE_URL = "http://tophercasa.ddns.net:3000/api/";
