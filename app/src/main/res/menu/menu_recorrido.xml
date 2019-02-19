@@ -12,4 +12,9 @@
         android:orderInCategory="100"
         android:title="ADDCLIENTE"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_post_data"
+        android:orderInCategory="100"
+        android:title="POSTDATA"
+        app:showAsAction="never" />
 </menu>

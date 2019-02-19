@@ -40,6 +40,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 public class VentaActivity extends AppCompatActivity implements IPayload, RecorridoFragment.OnVentaClickListener {
 
     private Recorrido recorrido;
@@ -172,7 +180,56 @@ public class VentaActivity extends AppCompatActivity implements IPayload, Recorr
             this.recorrido.getVentas().add(v);
 
             mAdapter.notifyDataSetChanged();
+        } else if (id == R.id.menu_post_data) {
+            // POST DATA
+            Gson gson = new Gson();
+            String reqbody = gson.toJson(recorrido);
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("http://192.168.0.2:3000/")
+//                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            retrofit2.Callback<ResponseBody> callback = new Callback<ResponseBody>() {
+
+                /* When server response. */
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                    StringBuffer messageBuffer = new StringBuffer();
+                    int statusCode = response.code();
+                    if (statusCode == 200) {
+                        try {
+                            // Get return string.
+                            String returnBodyText = response.body().string();
+                            messageBuffer.append(returnBodyText);
+                        } catch (IOException ex) {
+                            Log.e("PONCHO", ex.getMessage());
+                        }
+                    } else {
+                        // If server return error.
+                        messageBuffer.append("Server return error code is ");
+                        messageBuffer.append(statusCode);
+                        messageBuffer.append("\r\n\r\n");
+                        messageBuffer.append("Error message is ");
+                        messageBuffer.append(response.message());
+                    }
+
+                    // Show a Toast message.
+                    Toast.makeText(getApplicationContext(), messageBuffer.toString(), Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            };
+
+            APIservice service = retrofit.create(APIservice.class);
+            RequestBody body = RequestBody.create(MediaType.parse("application/json"), reqbody);
+            service.recorrido(body).enqueue(callback);
         }
+
         return super.onOptionsItemSelected(item);
     }
 
