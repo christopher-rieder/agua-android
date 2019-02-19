@@ -22,6 +22,7 @@ import com.rieder.christopher.aguaapp.DomainClasses.Cliente;
 import com.rieder.christopher.aguaapp.DomainClasses.EnvasesEnComodato;
 import com.rieder.christopher.aguaapp.DomainClasses.Producto;
 import com.rieder.christopher.aguaapp.DomainClasses.Recorrido;
+import com.rieder.christopher.aguaapp.DomainClasses.ServerResponse;
 import com.rieder.christopher.aguaapp.DomainClasses.TemplateRecorrido;
 import com.rieder.christopher.aguaapp.DomainClasses.Venta;
 
@@ -40,7 +41,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -185,22 +185,18 @@ public class VentaActivity extends AppCompatActivity implements IPayload, Recorr
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
-            retrofit2.Callback<ResponseBody> callback = new Callback<ResponseBody>() {
+            retrofit2.Callback<ServerResponse> callback = new Callback<ServerResponse>() {
 
                 /* When server response. */
                 @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
 
                     StringBuffer messageBuffer = new StringBuffer();
                     int statusCode = response.code();
                     if (statusCode == 200) {
-                        try {
-                            // Get return string.
-                            String returnBodyText = response.body().string();
-                            messageBuffer.append(returnBodyText);
-                        } catch (IOException ex) {
-                            Log.e("PONCHO", ex.getMessage());
-                        }
+                        // Get return string.
+                        ServerResponse returnBodyText = response.body();
+                        messageBuffer.append(returnBodyText.getMessage());
                     } else {
                         // If server return error.
                         messageBuffer.append("Server return error code is ");
@@ -215,7 +211,7 @@ public class VentaActivity extends AppCompatActivity implements IPayload, Recorr
                 }
 
                 @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                public void onFailure(Call<ServerResponse> call, Throwable t) {
                     Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
                 }
             };
