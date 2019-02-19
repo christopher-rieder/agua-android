@@ -40,13 +40,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class VentaActivity extends AppCompatActivity implements IPayload, RecorridoFragment.OnVentaClickListener {
 
@@ -181,13 +180,9 @@ public class VentaActivity extends AppCompatActivity implements IPayload, Recorr
 
             mAdapter.notifyDataSetChanged();
         } else if (id == R.id.menu_post_data) {
-            // POST DATA
-            Gson gson = new Gson();
-            String reqbody = gson.toJson(recorrido);
-
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("http://192.168.0.2:3000/")
-//                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
             retrofit2.Callback<ResponseBody> callback = new Callback<ResponseBody>() {
@@ -226,8 +221,7 @@ public class VentaActivity extends AppCompatActivity implements IPayload, Recorr
             };
 
             APIservice service = retrofit.create(APIservice.class);
-            RequestBody body = RequestBody.create(MediaType.parse("application/json"), reqbody);
-            service.recorrido(body).enqueue(callback);
+            service.recorrido(recorrido).enqueue(callback);
         }
 
         return super.onOptionsItemSelected(item);

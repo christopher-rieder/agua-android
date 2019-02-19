@@ -1,6 +1,7 @@
 package com.rieder.christopher.aguaapp;
 
-import okhttp3.RequestBody;
+import com.rieder.christopher.aguaapp.DomainClasses.Recorrido;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -11,5 +12,5 @@ public interface APIservice {
     @Headers({"Content-Type: application/json"})
 
     @POST("api/recorrido")
-    Call<ResponseBody> recorrido(@Body RequestBody body);
+    Call<ResponseBody> recorrido(@Body Recorrido body);
 }
