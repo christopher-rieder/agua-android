@@ -1,4 +1,4 @@
-package com.rieder.christopher.aguaapp.DomainClasses;
+package com.rieder.christopher.aguaapp.domain;
 
 import android.net.Uri;
 

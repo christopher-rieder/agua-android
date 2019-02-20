@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.rieder.christopher.aguaapp.DomainClasses.Cliente;
-import com.rieder.christopher.aguaapp.DomainClasses.Recorrido;
-import com.rieder.christopher.aguaapp.DomainClasses.Venta;
+import com.rieder.christopher.aguaapp.domain.Cliente;
+import com.rieder.christopher.aguaapp.domain.Recorrido;
+import com.rieder.christopher.aguaapp.domain.Venta;
 
 import java.util.ArrayList;
 

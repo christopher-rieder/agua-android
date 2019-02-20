@@ -7,8 +7,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
-import com.rieder.christopher.aguaapp.DomainClasses.Recorrido;
-import com.rieder.christopher.aguaapp.DomainClasses.Venta;
+import com.rieder.christopher.aguaapp.domain.Recorrido;
+import com.rieder.christopher.aguaapp.domain.Venta;
 
 import java.util.ArrayList;
 

@@ -1,10 +1,10 @@
 package com.rieder.christopher.aguaapp;
 
-import com.rieder.christopher.aguaapp.DomainClasses.EnvasesEnComodato;
-import com.rieder.christopher.aguaapp.DomainClasses.Producto;
-import com.rieder.christopher.aguaapp.DomainClasses.Recorrido;
-import com.rieder.christopher.aguaapp.DomainClasses.ServerResponse;
-import com.rieder.christopher.aguaapp.DomainClasses.TemplateRecorrido;
+import com.rieder.christopher.aguaapp.domain.EnvasesEnComodato;
+import com.rieder.christopher.aguaapp.domain.Producto;
+import com.rieder.christopher.aguaapp.domain.Recorrido;
+import com.rieder.christopher.aguaapp.domain.ServerResponse;
+import com.rieder.christopher.aguaapp.domain.TemplateRecorrido;
 
 import java.util.ArrayList;
 

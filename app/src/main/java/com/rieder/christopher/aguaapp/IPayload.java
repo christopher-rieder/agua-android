@@ -1,7 +1,7 @@
 package com.rieder.christopher.aguaapp;
 
-import com.rieder.christopher.aguaapp.DomainClasses.Producto;
-import com.rieder.christopher.aguaapp.DomainClasses.TemplateRecorrido;
+import com.rieder.christopher.aguaapp.domain.Producto;
+import com.rieder.christopher.aguaapp.domain.TemplateRecorrido;
 
 import java.util.ArrayList;
 

@@ -12,8 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.rieder.christopher.aguaapp.DomainClasses.DetalleVenta;
-import com.rieder.christopher.aguaapp.DomainClasses.Venta;
+import com.rieder.christopher.aguaapp.domain.DetalleVenta;
+import com.rieder.christopher.aguaapp.domain.Venta;
 
 import java.util.ArrayList;
 

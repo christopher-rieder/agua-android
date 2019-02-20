@@ -17,13 +17,13 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jinais.gnlib.android.launcher.GNLauncher;
-import com.rieder.christopher.aguaapp.DomainClasses.Cliente;
-import com.rieder.christopher.aguaapp.DomainClasses.EnvasesEnComodato;
-import com.rieder.christopher.aguaapp.DomainClasses.Producto;
-import com.rieder.christopher.aguaapp.DomainClasses.Recorrido;
-import com.rieder.christopher.aguaapp.DomainClasses.ServerResponse;
-import com.rieder.christopher.aguaapp.DomainClasses.TemplateRecorrido;
-import com.rieder.christopher.aguaapp.DomainClasses.Venta;
+import com.rieder.christopher.aguaapp.domain.Cliente;
+import com.rieder.christopher.aguaapp.domain.EnvasesEnComodato;
+import com.rieder.christopher.aguaapp.domain.Producto;
+import com.rieder.christopher.aguaapp.domain.Recorrido;
+import com.rieder.christopher.aguaapp.domain.ServerResponse;
+import com.rieder.christopher.aguaapp.domain.TemplateRecorrido;
+import com.rieder.christopher.aguaapp.domain.Venta;
 
 import org.ankit.gpslibrary.MyTracker;
 

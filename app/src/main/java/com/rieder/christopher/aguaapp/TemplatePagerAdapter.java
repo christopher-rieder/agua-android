@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.rieder.christopher.aguaapp.DomainClasses.TemplateRecorrido;
+import com.rieder.christopher.aguaapp.domain.TemplateRecorrido;
 
 import java.util.ArrayList;
 

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.rieder.christopher.aguaapp.DomainClasses.Cliente;
+import com.rieder.christopher.aguaapp.domain.Cliente;
 
 import java.util.List;
 

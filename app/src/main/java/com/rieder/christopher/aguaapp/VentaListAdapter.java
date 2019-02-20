@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.rieder.christopher.aguaapp.DomainClasses.DetalleVenta;
+import com.rieder.christopher.aguaapp.domain.DetalleVenta;
 
 import java.util.List;
 

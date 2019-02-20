@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.rieder.christopher.aguaapp.DomainClasses.Cliente;
-import com.rieder.christopher.aguaapp.DomainClasses.TemplateRecorrido;
+import com.rieder.christopher.aguaapp.domain.Cliente;
+import com.rieder.christopher.aguaapp.domain.TemplateRecorrido;
 
 import java.util.ArrayList;
 
