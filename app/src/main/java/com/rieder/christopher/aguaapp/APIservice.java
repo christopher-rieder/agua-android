@@ -1,5 +1,6 @@
 package com.rieder.christopher.aguaapp;
 
+import com.rieder.christopher.aguaapp.DomainClasses.EnvasesEnComodato;
 import com.rieder.christopher.aguaapp.DomainClasses.Producto;
 import com.rieder.christopher.aguaapp.DomainClasses.Recorrido;
 import com.rieder.christopher.aguaapp.DomainClasses.ServerResponse;
@@ -12,6 +13,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface APIservice {
     @Headers({"Content-Type: application/json"})
@@ -25,6 +27,9 @@ public interface APIservice {
 
     @GET("api/productos")
     Call<ArrayList<Producto>> getProductos();
+
+    @GET("api/envasesEnComodatoPorRecorrido/{templateId}")
+    Call<ArrayList<EnvasesEnComodato>> getEnvasesEnComodato(@Path("templateId") Integer id);
 
 
 }

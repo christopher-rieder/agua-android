@@ -3,7 +3,6 @@ package com.rieder.christopher.aguaapp;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -33,8 +32,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,6 +47,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class VentaActivity extends AppCompatActivity implements IPayload, RecorridoFragment.OnVentaClickListener {
 
+    // URL: https://agua-lacalera.herokuapp.com/;
+    // URL2: https://192.168.0.2:3000/;
     private Recorrido recorrido;
     private File file;
     private VentaPagerAdapter mAdapter;
@@ -80,7 +79,36 @@ public class VentaActivity extends AppCompatActivity implements IPayload, Recorr
     // TODO: PERMITIR AGREGAR O QUITAR CLIENTES. *LUEGO* DE CARGAR LOS DEL TEMPLATE.
     // ME PARECE QUE VA A SER MEJOR HACERLO EN VentaActivity.
     // Y TENER UN FRAGMENT, ACTIVITY O LO QUE SEA PARA AGREGAR O QUITAR CLIENTES.
+    Callback<ArrayList<EnvasesEnComodato>> envasesCallback = new Callback<ArrayList<EnvasesEnComodato>>() {
+        /* When server response. */
+        @Override
+        public void onResponse(Call<ArrayList<EnvasesEnComodato>> call, Response<ArrayList<EnvasesEnComodato>> response) {
+            StringBuffer messageBuffer = new StringBuffer();
 
+            int statusCode = response.code();
+
+            if (statusCode == 200) {
+                updateData(response.body());
+
+                messageBuffer.append("RECIBIDO!");
+            } else {
+                // If server return error.
+                messageBuffer.append("Server return error code is ");
+                messageBuffer.append(statusCode);
+                messageBuffer.append("\r\n\r\n");
+                messageBuffer.append("Error message is ");
+                messageBuffer.append(response.message());
+            }
+
+            // Show a Toast message.
+            Toast.makeText(getApplicationContext(), messageBuffer.toString(), Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onFailure(Call<ArrayList<EnvasesEnComodato>> call, Throwable t) {
+            Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    };
 
     // BUILD RECORRIDOS...
     @Override
@@ -94,38 +122,15 @@ public class VentaActivity extends AppCompatActivity implements IPayload, Recorr
         this.recorrido = new Recorrido(template.getNombre(), today, 1, 0, 60);
         recorrido.buildVentas(template.getClientes());
 
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.0.2:3000/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        APIservice service = retrofit.create(APIservice.class);
+        service.getEnvasesEnComodato(template.getRecorridoTemplateID()).enqueue(envasesCallback);
         // GET ENVASES EN COMODATO DE CADA CLIENTE.
-        new RetrieveRecorrido(this, template.getRecorridoTemplateID()).execute();
-    }
-
-    private void updateData(String[] feed) {
-        Gson gson = new Gson();
-        EnvasesEnComodato[] envasesEnComodato = gson.fromJson(feed[0], EnvasesEnComodato[].class);
-
-        // Iterar cada venta, si coincide el clienteID, agregar cantidades de productos.
-        // O(n^2) but who cares, son pocas iteraciones, no hace falta usar árboles binarios, etc.
-        for (Venta venta : recorrido.getVentas()) {
-            Map<Producto, Integer> values = new HashMap<>();
-
-            int clienteID = venta.getCliente().getClienteID();
-            for (EnvasesEnComodato e : envasesEnComodato) {
-                if (e.getClienteID() == clienteID) {
-                    Log.i("Envases", productos.get(e.getProductoID() - 1) + "|" + e.getCantidad());
-                    //TODO: ESTA BIEN HECHO? TESTEAR LUEGO...
-                    //Tal vez, implementar método equals.
-                    values.put(productos.get(e.getProductoID() - 1), e.getCantidad());
-                }
-            }
-            venta.buildDetalleVentas(values);
-        }
-
-        this.mViewPager = this.findViewById(R.id.venta_view_pager);
-        this.mAdapter = new VentaPagerAdapter(this, this.getSupportFragmentManager(), this.recorrido);
-        this.mViewPager.setAdapter(this.mAdapter);
-
-        this.tabLayout = this.findViewById(R.id.venta_tabs);
-        this.tabLayout.setupWithViewPager(this.mViewPager);
-        this.tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+//        new RetrieveRecorrido(this, template.getRecorridoTemplateID()).execute();
     }
 
     // It isn't large enough to warrant an async task
@@ -258,101 +263,30 @@ public class VentaActivity extends AppCompatActivity implements IPayload, Recorr
         mViewPager.setCurrentItem(VentaPagerAdapter.TAB_INDEX_VENTA);
     }
 
-    private static class RetrieveRecorrido extends AsyncTask<String, Void, String[]> {
+    private void updateData(ArrayList<EnvasesEnComodato> envasesEnComodato) {
+        // Iterar cada venta, si coincide el clienteID, agregar cantidades de productos.
+        // O(n^2) but who cares, son pocas iteraciones, no hace falta usar árboles binarios, etc.
+        for (Venta venta : recorrido.getVentas()) {
+            Map<Producto, Integer> values = new HashMap<>();
 
-        private int recorridoTemplateID;
-        private WeakReference<VentaActivity> activityReference;
-
-        RetrieveRecorrido(VentaActivity context, int recorridoTemplateID) {
-            this.recorridoTemplateID = recorridoTemplateID;
-            activityReference = new WeakReference<>(context);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            VentaActivity activity = activityReference.get();
-            if (activity == null || activity.isFinishing()) return;
-
-            Toast.makeText(activity, "Preparando para cargar datos...", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        protected String[] doInBackground(String... urls) {
-            try {
-                URL checkLocalServer = new URL(HttpHelper.BASE_URL_TEST);
-                String hello_world = HttpHelper.makeHttpRequest(checkLocalServer);
-
-                String BASE_URL = HttpHelper.BASE_URL;
-                if (!hello_world.equals("Hello World!")) {
-                    BASE_URL = "http://tophercasa.ddns.net:3000/api/"; // TODO: VER EN DONDE PONER...
+            int clienteID = venta.getCliente().getClienteID();
+            for (EnvasesEnComodato e : envasesEnComodato) {
+                if (e.getClienteID() == clienteID) {
+                    Log.i("Envases", productos.get(e.getProductoID() - 1) + "|" + e.getCantidad());
+                    //TODO: ESTA BIEN HECHO? TESTEAR LUEGO...
+                    //Tal vez, implementar método equals.
+                    values.put(productos.get(e.getProductoID() - 1), e.getCantidad());
                 }
-
-                URL getEnvasesEnComodato = new URL(BASE_URL + "envasesEnComodatoPorRecorrido" + "/" + this.recorridoTemplateID);
-                String jsonEnvasesEnComodato = HttpHelper.makeHttpRequest(getEnvasesEnComodato);
-
-                return new String[]{jsonEnvasesEnComodato};
-
-
-            } catch (Exception e) {
-                Log.e("ERROR EN HTTP GET", e.toString());
             }
-            return null;
+            venta.buildDetalleVentas(values);
         }
 
-        protected void onPostExecute(String[] feed) {
-            VentaActivity activity = activityReference.get();
-            if (activity == null || activity.isFinishing()) return;
-            activity.updateData(feed);
-        }
-    }
+        this.mViewPager = this.findViewById(R.id.venta_view_pager);
+        this.mAdapter = new VentaPagerAdapter(this, this.getSupportFragmentManager(), this.recorrido);
+        this.mViewPager.setAdapter(this.mAdapter);
 
-    private static class RetrieveCliente extends AsyncTask<String, Void, String[]> {
-
-        private WeakReference<VentaActivity> activityReference;
-        private int clienteID;
-
-        RetrieveCliente(VentaActivity context, int clienteID) {
-            activityReference = new WeakReference<>(context);
-            this.clienteID = clienteID;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            VentaActivity activity = activityReference.get();
-            if (activity == null || activity.isFinishing()) return;
-
-            Toast.makeText(activity, "Preparando para cargar datos...", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        protected String[] doInBackground(String... urls) {
-            try {
-                URL checkLocalServer = new URL(HttpHelper.BASE_URL_TEST);
-                String hello_world = HttpHelper.makeHttpRequest(checkLocalServer);
-
-                String BASE_URL = HttpHelper.BASE_URL;
-                if (!hello_world.equals("Hello World!")) {
-                    BASE_URL = "http://tophercasa.ddns.net:3000/api/";
-                }
-
-                URL getCliente = new URL(BASE_URL + "cliente" + "/" + this.clienteID);
-                String jsonCliente = HttpHelper.makeHttpRequest(getCliente);
-
-                URL getEnvases = new URL(BASE_URL + "envasesEnComodatoPorCliente" + "/" + this.clienteID);
-                String jsonEnvases = HttpHelper.makeHttpRequest(getEnvases);
-
-                return new String[]{jsonCliente, jsonEnvases};
-
-            } catch (Exception e) {
-                Log.e("ERROR EN HTTP GET", e.toString());
-            }
-            return null;
-        }
-
-        protected void onPostExecute(String[] feed) {
-            VentaActivity activity = activityReference.get();
-            if (activity == null || activity.isFinishing()) return;
-            activity.updateData(feed);
-        }
+        this.tabLayout = this.findViewById(R.id.venta_tabs);
+        this.tabLayout.setupWithViewPager(this.mViewPager);
+        this.tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
     }
 }
