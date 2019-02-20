@@ -37,6 +37,7 @@ import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,7 +55,7 @@ public class VentaActivity extends AppCompatActivity implements IPayload, Recorr
     private VentaPagerAdapter mAdapter;
     private ViewPager mViewPager;
     private TabLayout tabLayout;
-    private Producto[] productos;
+    private ArrayList<Producto> productos;
 
     private static final int REQUEST_CODE_PERMISSION = 2;
 
@@ -83,7 +84,7 @@ public class VentaActivity extends AppCompatActivity implements IPayload, Recorr
 
     // BUILD RECORRIDOS...
     @Override
-    public void payloadClientes(TemplateRecorrido template, Producto[] productos) {
+    public void payloadClientes(TemplateRecorrido template, ArrayList<Producto> productos) {
 
         @SuppressLint("SimpleDateFormat")
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -109,10 +110,10 @@ public class VentaActivity extends AppCompatActivity implements IPayload, Recorr
             int clienteID = venta.getCliente().getClienteID();
             for (EnvasesEnComodato e : envasesEnComodato) {
                 if (e.getClienteID() == clienteID) {
-                    Log.i("Envases", productos[e.getProductoID() - 1] + "|" + e.getCantidad());
+                    Log.i("Envases", productos.get(e.getProductoID() - 1) + "|" + e.getCantidad());
                     //TODO: ESTA BIEN HECHO? TESTEAR LUEGO...
                     //Tal vez, implementar método equals.
-                    values.put(productos[e.getProductoID() - 1], e.getCantidad());
+                    values.put(productos.get(e.getProductoID() - 1), e.getCantidad());
                 }
             }
             venta.buildDetalleVentas(values);
@@ -172,8 +173,8 @@ public class VentaActivity extends AppCompatActivity implements IPayload, Recorr
             Venta v = new Venta(c);
             Map<Producto, Integer> values = new HashMap<>();
 
-            values.put(productos[0], 0);
-            values.put(productos[1], 0);
+            values.put(productos.get(0), 0);
+            values.put(productos.get(1), 0);
             v.buildDetalleVentas(values);
 
             this.recorrido.getVentas().add(v);
