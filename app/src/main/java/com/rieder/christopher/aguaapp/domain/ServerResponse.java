@@ -9,7 +9,6 @@ public class ServerResponse {
 
     public String getMessage() {
         return message;
-
     }
 
     public void setMessage(String message) {

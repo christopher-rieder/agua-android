@@ -104,7 +104,7 @@ public class TemplateActivity extends AppCompatActivity {
 
         final Button seleccionarRecorridoBtn = findViewById(R.id.seleccionar_recorrido_button);
 
-        // Obtener lista de clientes gracias a la librería 'com.jinais.android:gnlib-android:1.1.0+@jar'
+        // Usando la libreria gnlib-android para enviar datos entre activities
         seleccionarRecorridoBtn.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {

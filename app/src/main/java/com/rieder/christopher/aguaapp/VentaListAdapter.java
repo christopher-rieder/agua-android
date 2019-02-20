@@ -36,16 +36,16 @@ public class VentaListAdapter extends ArrayAdapter<DetalleVenta> {
 
         // SET TEXTVIEWS WITH DETALLE_VENTA DATA
         TextView venta_producto_nombre = listItemView.findViewById(R.id.venta_producto_nombre);
-        venta_producto_nombre.setText("" + dv.getProducto());
+        venta_producto_nombre.setText(dv.getProducto());
 
         TextView venta_producto_cantidad = listItemView.findViewById(R.id.venta_cantidad);
-        venta_producto_cantidad.setText("" + dv.getCantidad());
+        venta_producto_cantidad.setText(dv.getCantidad());
 
         TextView venta_producto_precio = listItemView.findViewById(R.id.venta_precio);
         venta_producto_precio.setText("$" + dv.getPrecioUnitario() * dv.getCantidad());
 
         TextView venta_producto_comodato = listItemView.findViewById(R.id.venta_comodato_cantidad);
-        venta_producto_comodato.setText("" + dv.getEnvasesPrevios());
+        venta_producto_comodato.setText(dv.getEnvasesPrevios());
 
         // SET CLICK HANDLERS
         OnClick clickHandler = new OnClick(dv, venta_producto_cantidad, venta_producto_precio);

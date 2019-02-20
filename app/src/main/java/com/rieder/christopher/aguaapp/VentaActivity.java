@@ -47,8 +47,19 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class VentaActivity extends AppCompatActivity implements IPayload, RecorridoFragment.OnVentaClickListener {
 
+    // TODO: UNIFICAR APIservice en un Singleton. Cambiar nombre a APIService
     // URL: https://agua-lacalera.herokuapp.com/;
     // URL2: https://192.168.0.2:3000/;
+
+    // TODO: Implementar Activity LifeCycle Methods. Guardar el state o bundle de la aplicacion,
+    // para que el contexto, junto a los datos ya cargados, no sea perdidos en caso de que android
+    // destruya los datos. Esta app va a estar abierta por horas, y pueden pasar varias cosas.
+    // Asi que hay que manejar bien el estado de la app, persistir en una base de datos o json en disco
+
+    // TODO: PERMITIR AGREGAR O QUITAR CLIENTES. *LUEGO* DE CARGAR LOS DEL TEMPLATE.
+    // ME PARECE QUE VA A SER MEJOR HACERLO EN VentaActivity.
+    // Y TENER UN FRAGMENT, ACTIVITY O LO QUE SEA PARA AGREGAR O QUITAR CLIENTES.
+
     private Recorrido recorrido;
     private File file;
     private VentaPagerAdapter mAdapter;
@@ -57,8 +68,6 @@ public class VentaActivity extends AppCompatActivity implements IPayload, Recorr
     private ArrayList<Producto> productos;
 
     private static final int REQUEST_CODE_PERMISSION = 2;
-
-    // TODO: Implementar Activity LifeCycle Methods
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,12 +82,10 @@ public class VentaActivity extends AppCompatActivity implements IPayload, Recorr
             }
         });
 
-        // Notificar que la actividad está lista para recibir el payload (List de clientes)
+        // Notificar que la actividad está lista para recibir el payload (gnlib, IPayload)
         GNLauncher.get().ping(this);
     }
-    // TODO: PERMITIR AGREGAR O QUITAR CLIENTES. *LUEGO* DE CARGAR LOS DEL TEMPLATE.
-    // ME PARECE QUE VA A SER MEJOR HACERLO EN VentaActivity.
-    // Y TENER UN FRAGMENT, ACTIVITY O LO QUE SEA PARA AGREGAR O QUITAR CLIENTES.
+
     Callback<ArrayList<EnvasesEnComodato>> envasesCallback = new Callback<ArrayList<EnvasesEnComodato>>() {
         /* When server response. */
         @Override
@@ -110,10 +117,11 @@ public class VentaActivity extends AppCompatActivity implements IPayload, Recorr
         }
     };
 
-    // BUILD RECORRIDOS...
+    // Construir recorrido. Este metodo es llamado por la Template Activity.
+    // Usando la libreria gnlib-android para enviar datos entre activities
     @Override
     public void payloadClientes(TemplateRecorrido template, ArrayList<Producto> productos) {
-
+        // FIXME: I want to send and receive unix epoch time in miliseconds
         @SuppressLint("SimpleDateFormat")
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String today = dateFormat.format(new Date());
@@ -127,14 +135,13 @@ public class VentaActivity extends AppCompatActivity implements IPayload, Recorr
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
+        // In the callback the data is updated with the information of envasesEnComodato
         APIservice service = retrofit.create(APIservice.class);
         service.getEnvasesEnComodato(template.getRecorridoTemplateID()).enqueue(envasesCallback);
-        // GET ENVASES EN COMODATO DE CADA CLIENTE.
-//        new RetrieveRecorrido(this, template.getRecorridoTemplateID()).execute();
     }
 
     // It isn't large enough to warrant an async task
-    // TODO: ESTO ES PARA DEBUG.
+    // TODO: ESTO ES PARA DEBUG. Maybe for storing the state of the app too.
     private void writeJsonToFile() {
         Gson gson = new Gson();
         file = new File("/mnt/sdcard/toto.json");
@@ -272,9 +279,7 @@ public class VentaActivity extends AppCompatActivity implements IPayload, Recorr
             int clienteID = venta.getCliente().getClienteID();
             for (EnvasesEnComodato e : envasesEnComodato) {
                 if (e.getClienteID() == clienteID) {
-                    Log.i("Envases", productos.get(e.getProductoID() - 1) + "|" + e.getCantidad());
-                    //TODO: ESTA BIEN HECHO? TESTEAR LUEGO...
-                    //Tal vez, implementar método equals.
+                    // (e.getProductoID() - 1) porque en la base de datos empieza con 1 en vez de 0.
                     values.put(productos.get(e.getProductoID() - 1), e.getCantidad());
                 }
             }

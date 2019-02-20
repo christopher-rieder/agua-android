@@ -40,8 +40,6 @@ public final class DetalleVenta {
     }
 
     public void decrementar() {
-        if (this.cantidad > 0) {
-            this.cantidad -= 1;
-        }
+        this.cantidad = Math.max(0, this.cantidad - 1);
     }
 }
