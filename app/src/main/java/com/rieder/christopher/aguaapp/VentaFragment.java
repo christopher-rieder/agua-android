@@ -6,10 +6,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.rieder.christopher.aguaapp.domain.DetalleVenta;
@@ -42,10 +43,9 @@ public class VentaFragment extends Fragment {
         venta_domicilio_cliente.setText(this.venta.getCliente().getDomicilio());
 
         final ArrayList<DetalleVenta> detallesVenta = venta.getDetallesVenta();
-        VentaListAdapter itemsAdapter = new VentaListAdapter(this.getContext(), detallesVenta);
-        ListView listView = rootView.findViewById(R.id.venta_list_view);
-        listView.setAdapter(itemsAdapter);
-
+        RecyclerView recyclerView = rootView.findViewById(R.id.venta_recycler_view);
+        recyclerView.setAdapter(new VentaListAdapter(this.getContext(), detallesVenta));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         FloatingActionButton fab = rootView.findViewById(R.id.venta_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
