@@ -81,7 +81,7 @@ public class VentaListAdapter extends RecyclerView.Adapter<VentaListAdapter.View
         }
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         private TextView venta_producto_nombre;
         private TextView venta_producto_cantidad;
         private TextView venta_producto_precio;
@@ -89,7 +89,7 @@ public class VentaListAdapter extends RecyclerView.Adapter<VentaListAdapter.View
         private Button incrementar;
         private Button decrementar;
 
-        public ViewHolder(@NonNull View view) {
+        ViewHolder(@NonNull View view) {
             super(view);
             this.venta_producto_nombre = view.findViewById(R.id.venta_producto_nombre);
             this.venta_producto_cantidad = view.findViewById(R.id.venta_cantidad);

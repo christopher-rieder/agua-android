@@ -4,11 +4,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.rieder.christopher.aguaapp.domain.Cliente;
 import com.rieder.christopher.aguaapp.domain.Recorrido;
@@ -41,16 +41,16 @@ public class RecorridoFragment extends Fragment {
             clientes.add(venta.getCliente());
         }
 
-        ClienteListAdapter itemsAdapter = new ClienteListAdapter(this.getContext(), clientes);
-        ListView listView = rootView.findViewById(R.id.cliente_list_view);
-        listView.setAdapter(itemsAdapter);
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                callback.onVentaSelected(position);
-                return true;
-            }
-        });
+        RecyclerView recyclerView = rootView.findViewById(R.id.cliente_recycler_view);
+        recyclerView.setAdapter(new ClienteListAdapter(this.getContext(), clientes));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+//        recyclerView.setOnClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                callback.onVentaSelected(position);
+//                return true;
+//            }
+//        });
         return rootView;
     }
 
