@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.rieder.christopher.aguaapp.domain.Cliente;
 import com.rieder.christopher.aguaapp.domain.Recorrido;
 import com.rieder.christopher.aguaapp.domain.Venta;
 
@@ -19,6 +18,7 @@ import java.util.ArrayList;
 public class RecorridoFragment extends Fragment {
 
     OnVentaClickListener callback;
+    private Recorrido recorrido;
 
     // Override onAttach to make sure that the container activity has implemented the callback
     @Override
@@ -36,13 +36,10 @@ public class RecorridoFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.cliente_list_view, container, false);
 
-        final ArrayList<Cliente> clientes = new ArrayList<>();
-        for (Venta venta : recorrido.getVentas()) {
-            clientes.add(venta.getCliente());
-        }
+        final ArrayList<Venta> ventas = recorrido.getVentas();
 
         RecyclerView recyclerView = rootView.findViewById(R.id.cliente_recycler_view);
-        recyclerView.setAdapter(new ClienteListAdapter(this.getContext(), clientes));
+        recyclerView.setAdapter(new VentaListAdapter(this.getContext(), ventas));
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 //        recyclerView.setOnClickListener(new AdapterView.OnItemLongClickListener() {
 //            @Override
@@ -53,8 +50,6 @@ public class RecorridoFragment extends Fragment {
 //        });
         return rootView;
     }
-
-    private Recorrido recorrido;
 
     public void setRecorrido(Recorrido recorrido) {
         this.recorrido = recorrido;

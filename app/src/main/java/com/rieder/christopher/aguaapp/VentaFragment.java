@@ -44,7 +44,7 @@ public class VentaFragment extends Fragment {
 
         final ArrayList<DetalleVenta> detallesVenta = venta.getDetallesVenta();
         RecyclerView recyclerView = rootView.findViewById(R.id.venta_recycler_view);
-        recyclerView.setAdapter(new VentaListAdapter(this.getContext(), detallesVenta));
+        recyclerView.setAdapter(new DetalleVentaListAdapter(this.getContext(), detallesVenta));
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         FloatingActionButton fab = rootView.findViewById(R.id.venta_fab);
         fab.setOnClickListener(new View.OnClickListener() {

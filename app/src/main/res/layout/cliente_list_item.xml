@@ -7,6 +7,7 @@
     android:orientation="horizontal"
     android:padding="8dp">
 
+
     <TextView
         android:id="@+id/circle"
         android:layout_width="64dp"
@@ -46,7 +47,6 @@
             tools:text="Las Heras 933" />
 
     </LinearLayout>
-
     <!--<Button
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"

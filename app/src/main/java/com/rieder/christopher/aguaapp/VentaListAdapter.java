@@ -1,6 +1,5 @@
 package com.rieder.christopher.aguaapp;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -10,18 +9,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.rieder.christopher.aguaapp.domain.DetalleVenta;
+import com.rieder.christopher.aguaapp.domain.Cliente;
+import com.rieder.christopher.aguaapp.domain.Venta;
 
 import java.util.List;
 
-public class VentaListAdapter extends RecyclerView.Adapter<VentaListAdapter.ViewHolder> {
+class VentaListAdapter extends RecyclerView.Adapter<VentaListAdapter.ViewHolder> {
 
-    private List<DetalleVenta> objects;
+    private List<Venta> objects;
     private Context context;
 
-    VentaListAdapter(Context context, List<DetalleVenta> objects) {
-        this.context = context;
+    public VentaListAdapter(Context context, List<Venta> objects) {
         this.objects = objects;
+        this.context = context;
     }
 
     @NonNull
@@ -34,19 +34,28 @@ public class VentaListAdapter extends RecyclerView.Adapter<VentaListAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        final DetalleVenta dv = objects.get(i);
-        assert dv != null;
+        final Venta venta = objects.get(i);
+        assert venta != null;
+        final Cliente cliente = venta.getCliente();
 
-        // SET TEXTVIEWS WITH DETALLE_VENTA DATA
-        viewHolder.venta_producto_nombre.setText(dv.getProducto());
-        viewHolder.venta_producto_cantidad.setText(String.valueOf(dv.getCantidad()));
-        viewHolder.venta_producto_precio.setText("$" + dv.getPrecioUnitario() * dv.getCantidad());
-        viewHolder.venta_producto_comodato.setText(String.valueOf(dv.getEnvasesPrevios()));
+        String firstLetter = cliente.getNombre().substring(0, 1);
+        StringBuilder detalles = new StringBuilder();
+        detalles.append("\uD83C\uDF7A <- ")
+                .append(venta.getDetallesVenta().get(0).getEnvasesPrevios())
+                .append(" / ")
+                .append("-> ")
+                .append(venta.getDetallesVenta().get(0).getCantidad());
+        detalles.append(" || ");
+        detalles.append("\uD83D\uDCA7 <- ")
+                .append(venta.getDetallesVenta().get(1).getEnvasesPrevios())
+                .append(" / ")
+                .append("-> ")
+                .append(venta.getDetallesVenta().get(1).getCantidad());
 
-        OnClick clickHandler = new OnClick(dv, viewHolder.venta_producto_cantidad, viewHolder.venta_producto_precio);
-
-        viewHolder.incrementar.setOnClickListener(clickHandler);
-        viewHolder.decrementar.setOnClickListener(clickHandler);
+        viewHolder.nameTextView.setText(cliente.getNombre());
+        viewHolder.letterCircleView.setText(firstLetter);
+        viewHolder.numberTextView.setText(cliente.getDomicilio());
+        viewHolder.ventaDetailsTextView.setText(detalles);
     }
 
     @Override
@@ -54,49 +63,22 @@ public class VentaListAdapter extends RecyclerView.Adapter<VentaListAdapter.View
         return this.objects.size();
     }
 
-    private final class OnClick implements View.OnClickListener {
-        private final DetalleVenta dv;
-        private final TextView cantidadTextView;
-        private final TextView precioTotal;
-
-        OnClick(DetalleVenta dv, TextView cantidadTextView, TextView precioTotal) {
-            this.dv = dv;
-            this.cantidadTextView = cantidadTextView;
-            this.precioTotal = precioTotal;
-        }
-
-        @SuppressLint("SetTextI18n")
-        @Override
-        public void onClick(View v) {
-            Button b = (Button) v;
-            String str = (String) b.getText();
-
-            if (str.equals("+")) {
-                this.dv.incrementar();
-            } else {
-                this.dv.decrementar();
-            }
-            this.cantidadTextView.setText("" + dv.getCantidad());
-            this.precioTotal.setText("$" + dv.getPrecioUnitario() * dv.getCantidad());
-        }
-    }
-
     class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView venta_producto_nombre;
-        private TextView venta_producto_cantidad;
-        private TextView venta_producto_precio;
-        private TextView venta_producto_comodato;
-        private Button incrementar;
-        private Button decrementar;
+        private TextView nameTextView;
+        private TextView letterCircleView;
+        private TextView numberTextView;
+        private TextView ventaDetailsTextView;
+        private Button ventaListButton;
+        private View parentView;
 
-        ViewHolder(@NonNull View view) {
-            super(view);
-            this.venta_producto_nombre = view.findViewById(R.id.venta_producto_nombre);
-            this.venta_producto_cantidad = view.findViewById(R.id.venta_cantidad);
-            this.venta_producto_precio = view.findViewById(R.id.venta_precio);
-            this.venta_producto_comodato = view.findViewById(R.id.venta_comodato_cantidad);
-            this.incrementar = view.findViewById(R.id.venta_button_incrementar);
-            this.decrementar = view.findViewById(R.id.venta_button_decrementar);
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            this.parentView = itemView;
+            this.nameTextView = itemView.findViewById(R.id.cliente_list_nombre);
+            this.letterCircleView = itemView.findViewById(R.id.circle);
+            this.numberTextView = itemView.findViewById(R.id.cliente_list_domicilio);
+            this.ventaDetailsTextView = itemView.findViewById(R.id.venta_list_detalles);
+            this.ventaListButton = itemView.findViewById(R.id.venta_list_button);
         }
     }
 }
