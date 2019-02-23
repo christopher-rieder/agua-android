@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    tools:layout_editor_absoluteY="81dp">
+
+    <LinearLayout
+        android:id="@+id/venta_list_item_linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:orientation="horizontal"
+        android:padding="0dp"
+        android:paddingLeft="0dp"
+        android:paddingTop="0dp"
+        android:paddingRight="0dp"
+        android:paddingBottom="0dp"
+        app:layout_constraintEnd_toStartOf="@+id/venta_button_incrementar"
+        app:layout_constraintStart_toEndOf="@+id/venta_button_decrementar"
+        app:layout_constraintTop_toTopOf="@+id/venta_button_decrementar">
+
+        <TextView
+            android:id="@+id/venta_cantidad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+            android:textColor="@color/textDark"
+            android:textSize="36sp"
+            tools:layout_constraintLeft_creator="1"
+            tools:layout_constraintTop_creator="1"
+            tools:text="3" />
+
+        <TextView
+            android:id="@+id/venta_cantidad_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="0dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:text="@string/envases_text"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault"
+            android:textColor="@color/textDark"
+            tools:layout_constraintLeft_creator="1"
+            tools:layout_constraintTop_creator="1" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/venta_precio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
+        android:textColor="@color/textDark"
+        android:textSize="36sp"
+        app:layout_constraintEnd_toEndOf="@+id/venta_list_item_linearLayout"
+        app:layout_constraintStart_toStartOf="@+id/venta_list_item_linearLayout"
+        app:layout_constraintTop_toBottomOf="@+id/venta_list_item_linearLayout"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintTop_creator="1"
+        tools:text="$50" />
+
+    <TextView
+        android:id="@+id/venta_producto_nombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
+        android:textColor="@color/textDark"
+        android:textSize="36sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintTop_creator="1"
+        tools:text="@string/agua_text" />
+
+    <TextView
+        android:id="@+id/venta_comodato_cantidad_texto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/comodato_text"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
+        android:textColor="@color/textDark"
+        app:layout_constraintEnd_toStartOf="@+id/venta_comodato_cantidad"
+        app:layout_constraintTop_toBottomOf="@+id/venta_producto_nombre"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintTop_creator="1" />
+
+    <TextView
+        android:id="@+id/venta_comodato_cantidad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="68dp"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
+        android:textColor="@color/textDark"
+        app:layout_constraintEnd_toEndOf="@+id/venta_producto_nombre"
+        app:layout_constraintTop_toBottomOf="@+id/venta_producto_nombre"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintTop_creator="1"
+        tools:text="3" />
+
+    <Button
+        android:id="@+id/venta_button_incrementar"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:background="@color/colorAccent"
+        android:text="@string/button_incrementar_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/venta_list_item_linearLayout" />
+
+    <Button
+        android:id="@+id/venta_button_decrementar"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:background="@color/colorAccent"
+        android:text="@string/button_decrementar_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/venta_comodato_cantidad_texto" />
+</android.support.constraint.ConstraintLayout>
